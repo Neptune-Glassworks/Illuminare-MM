@@ -656,7 +656,7 @@
           "y": -251.08879584707893
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -672,7 +672,7 @@
           "y": -447.3133183932122
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -688,7 +688,7 @@
           "y": 269.9300208265116
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -704,7 +704,7 @@
           "y": 292.2503368568723
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -720,7 +720,7 @@
           "y": 216.27860279033993
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -736,7 +736,7 @@
           "y": -301.03186851081176
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -752,7 +752,7 @@
           "y": -506.2613509577929
         },
         "selected": false,
-        "classes": "lamp table lamp"
+        "classes": "lamp table"
       },
       {
         "data": {
@@ -768,7 +768,7 @@
           "y": 18.402167496168566
         },
         "selected": false,
-        "classes": "lamp floor lamp"
+        "classes": "lamp floor"
       },
       {
         "data": {
@@ -784,7 +784,7 @@
           "y": 188.57015918628738
         },
         "selected": false,
-        "classes": "lamp floor lamp"
+        "classes": "lamp floor"
       },
       {
         "data": {
@@ -801,7 +801,7 @@
           "y": -509.63970895182854
         },
         "selected": false,
-        "classes": "lamp floor lamp"
+        "classes": "lamp floor"
       },
       {
         "data": {
