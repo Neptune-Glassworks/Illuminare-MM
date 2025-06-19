@@ -108,6 +108,15 @@
           });
           cy.fit(undefined, 20);
         });
+          // 👇 Make nodes clickable if they have a URL
+  cy.on('tap', 'node', function(evt){
+    const node = evt.target;
+    const url = node.data('url');
+    if (url) {
+      window.open(url, '_blank');
+    }
+  });
+
       });
   </script>
 </body>
