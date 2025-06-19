@@ -160,7 +160,7 @@
           "y": -95.5308839643057
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp chandelier"
       },
       {
         "data": {
@@ -288,7 +288,7 @@
           "y": -486.1707620515622
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp chandelier"
       },
       {
         "data": {
@@ -304,7 +304,7 @@
           "y": -387.8725838957397
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -320,7 +320,7 @@
           "y": -347.61378164336736
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -336,7 +336,7 @@
           "y": 249.56418224191205
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -352,7 +352,7 @@
           "y": -476.3619947298068
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -368,7 +368,7 @@
           "y": 372.4645890001331
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -384,7 +384,7 @@
           "y": 408.99655866438195
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -400,7 +400,7 @@
           "y": -45.18358366833889
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp pendant"
       },
       {
         "data": {
@@ -416,7 +416,7 @@
           "y": -407.2309367573575
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -512,7 +512,7 @@
           "y": 291.45974797789995
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -528,7 +528,7 @@
           "y": -500.53589814129305
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -544,7 +544,7 @@
           "y": 365.5488370805989
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -592,7 +592,7 @@
           "y": -109.42938349752637
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -608,7 +608,7 @@
           "y": -184.44674767775302
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -640,7 +640,7 @@
           "y": 243.795335572372
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp sconce"
       },
       {
         "data": {
@@ -656,7 +656,7 @@
           "y": -251.08879584707893
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -672,7 +672,7 @@
           "y": -447.3133183932122
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -688,7 +688,7 @@
           "y": 269.9300208265116
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -704,7 +704,7 @@
           "y": 292.2503368568723
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -720,7 +720,7 @@
           "y": 216.27860279033993
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -736,7 +736,7 @@
           "y": -301.03186851081176
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -752,7 +752,7 @@
           "y": -506.2613509577929
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp table lamp"
       },
       {
         "data": {
@@ -768,7 +768,7 @@
           "y": 18.402167496168566
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp floor lamp"
       },
       {
         "data": {
@@ -784,7 +784,7 @@
           "y": 188.57015918628738
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp floor lamp"
       },
       {
         "data": {
@@ -801,7 +801,7 @@
           "y": -509.63970895182854
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp floor lamp"
       },
       {
         "data": {
@@ -817,7 +817,7 @@
           "y": 181.32330071270425
         },
         "selected": false,
-        "classes": "theme"
+        "classes": "lamp outdoor"
       }
     ],
     "edges": [
