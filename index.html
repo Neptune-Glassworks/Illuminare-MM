@@ -71,6 +71,8 @@
         'control-point-weights': [0.5]
       });
     });
+    // 👇 Add this line to zoom/pan automatically
+  cy.fit(undefined, 20);  // 20px padding
   });
 });
 
