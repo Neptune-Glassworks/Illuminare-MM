@@ -73,7 +73,7 @@
           "degree_layout": 3,
           "name": "Integrated Circuit Chandelier",
           "SUID": 3663,
-          "selected": false
+          "selected": false,
           "url": "https://www.neptuneglassworks.com/lighting-shop/p/circuit-chandelier"
         },
         "position": {
@@ -202,7 +202,7 @@
           "degree_layout": 3,
           "name": "Blossom Chandelier",
           "SUID": 3649,
-          "selected": false
+          "selected": false,
           "url": "https://www.neptuneglassworks.com/lighting-shop/p/blossom-chandelier"
         },
         "position": {
@@ -283,7 +283,7 @@
           "degree_layout": 2,
           "name": "Lens Chandelier",
           "SUID": 3639,
-          "selected": false
+          "selected": false,
           "url": "https://www.neptuneglassworks.com/lighting-shop/p/lens-chandelier"
         },
         "position": {
