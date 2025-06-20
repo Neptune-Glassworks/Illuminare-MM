@@ -115,6 +115,7 @@
 const glowCooldown = new Set();
 const recentlyGlowed = new Set();
 const currentlyHoveredNodes = new Set(); // 👈 NEW
+let lastHoveredNodeId = null;
 
 
 
@@ -135,19 +136,21 @@ const currentlyHoveredNodes = new Set(); // 👈 NEW
           // Add hover class on mouseover if node has a URL
 cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
-  const glowId = 'glow-' + node.id();
+  const nodeId = node.id();
+  const glowId = 'glow-' + nodeId;
 
+  // Ignore if no URL or glow ring
   if (!node.data('url') || node.hasClass('glow-ring')) return;
 
-  // 👇 Prevent multiple triggers if still hovering
-  if (currentlyHoveredNodes.has(node.id())) return;
-  currentlyHoveredNodes.add(node.id());
+  // ✅ Only proceed if this is a new node hover
+  if (lastHoveredNodeId === nodeId) return;
+  lastHoveredNodeId = nodeId;
 
-  // 👇 Prevent retrigger if recently animated
+  // ✅ Prevent triggering during cooldown
   if (glowCooldown.has(glowId)) return;
   glowCooldown.add(glowId);
 
-  // Create glow effect
+  // Add glow ring node
   cy.add({
     group: 'nodes',
     data: { id: glowId },
@@ -183,11 +186,12 @@ cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
   const glowId = 'glow-' + node.id();
 
-  currentlyHoveredNodes.delete(node.id()); // 👈 Reset hover state on exit
+  // ✅ Reset tracking
+  lastHoveredNodeId = null;
 
-  // Prevent any fallback hover retrigger or animation
   if (recentlyGlowed.has(glowId)) return;
 });
+
 
 
 
