@@ -141,20 +141,32 @@ cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
   if (node.data('url')) {
     node.addClass('hover');
-    node.animate({
+
+    const glowId = 'glow-' + node.id();
+
+    // Create a glowing ring as a separate node
+    cy.add({
+      group: 'nodes',
+      data: { id: glowId },
+      position: node.position(),
+      classes: 'glow-ring'
+    });
+
+    const glow = cy.getElementById(glowId);
+    glow.animate({
       style: {
-        'border-width': 2,
-        'border-color': '#ffffff',
-        'border-opacity': 1,
-        'width': node.width() + 4,
-        'height': node.height() + 4
+        'width': node.width() * 3,
+        'height': node.height() * 3,
+        'opacity': 0
       }
     }, {
-      duration: 300,
-      easing: 'ease-in-out'
+      duration: 600,
+      easing: 'ease-out',
+      complete: () => glow.remove()
     });
   }
 });
+
 
 cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
