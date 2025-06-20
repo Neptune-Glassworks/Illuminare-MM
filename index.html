@@ -55,8 +55,8 @@
                 'height': 20,
                 'z-index': 0,
                 'shape': 'ellipse',
-                'events': 'no',  // prevent interaction issues
-                'label': ''       // no label on glow nodes
+                'events': 'no',
+                'label': ''
               }
             },
             {
@@ -101,31 +101,27 @@
                 'line-color': '#E1E7ED',
                 'line-style': 'dashed',
                 'opacity': 0.5,
-                'line-dash-pattern': [6, 4],  // Total pattern length = 10
+                'line-dash-pattern': [6, 4],
                 'curve-style': 'unbundled-bezier',
                 'edge-distances': 'node-position',
                 'control-point-distances': 0,
                 'control-point-weights': 0.5
               }
             },
-              {
-                selector: 'edge.highlighted-edge',
-                style: {
-                  'opacity': 1
-                }
+            {
+              selector: 'edge.highlighted-edge',
+              style: {
+                'opacity': 1
               }
+            }
           ],
-          layout: { name: 'preset' },
-
-          userZoomingEnabled: true,
-          wheelSensitivity: 0  // 👈 disables zoom-on-scroll
+          layout: { name: 'preset' }
         });
 
         const glowCooldown = new Set();
         const activeHoverSet = new Set();
 
         cy.ready(() => {
-          // curve factor for bezier edges
           const curveFactor = -0.35;
           cy.edges().forEach(edge => {
             const src = edge.source().position();
@@ -140,50 +136,47 @@
           });
 
           cy.fit(undefined, 20);
-          // --- Animate dashed edges from themes to lamps ---
-            let dashOffset = 0;
-let frameCount = 0;
 
-function animateThemeToLampEdges() {
-  frameCount++;
+          // ✅ Prevent zooming from normal scroll
+          cy.container().addEventListener('wheel', function(e) {
+            if (!e.ctrlKey && !e.metaKey) {
+              e.stopPropagation();
+            }
+          }, { passive: true });
 
-  // Adjust speed here (every 3 frames)
-  if (frameCount % 3 === 0) {
-    dashOffset = (dashOffset - 1 + 10) % 10; // Wrap at 10 to sync with pattern
-    cy.edges().forEach(edge => {
-      const source = edge.source();
-      const target = edge.target();
+          // Edge animation
+          let dashOffset = 0;
+          let frameCount = 0;
 
-      if (source.hasClass('theme') && target.hasClass('lamp')) {
-        edge.style('line-dash-offset', dashOffset);
-      }
-    });
-        // Prevent two-finger scroll from hijacking zoom
-        cy.container().addEventListener('wheel', function(e) {
-          if (!e.ctrlKey && !e.metaKey) {
-            e.stopPropagation();
+          function animateThemeToLampEdges() {
+            frameCount++;
+            if (frameCount % 3 === 0) {
+              dashOffset = (dashOffset - 1 + 10) % 10;
+              cy.edges().forEach(edge => {
+                const source = edge.source();
+                const target = edge.target();
+                if (source.hasClass('theme') && target.hasClass('lamp')) {
+                  edge.style('line-dash-offset', dashOffset);
+                }
+              });
+            }
+            requestAnimationFrame(animateThemeToLampEdges);
           }
-        }, { passive: true });
 
-  }
+          requestAnimationFrame(animateThemeToLampEdges);
 
-  requestAnimationFrame(animateThemeToLampEdges);
-}
+          // Edge highlighting on theme node hover
+          cy.nodes('.theme')
+            .on('mouseover', function(evt){
+              const node = evt.target;
+              node.connectedEdges().addClass('highlighted-edge');
+            })
+            .on('mouseout', function(evt){
+              const node = evt.target;
+              node.connectedEdges().removeClass('highlighted-edge');
+            });
 
-requestAnimationFrame(animateThemeToLampEdges);
-          
-
-// Theme node edge highlighting
-cy.nodes('.theme')
-  .on('mouseover', function(evt){
-    const node = evt.target;
-    node.connectedEdges().addClass('highlighted-edge');
-  })
-  .on('mouseout', function(evt){
-    const node = evt.target;
-    node.connectedEdges().removeClass('highlighted-edge');
-  });
-          
+          // Glow animation
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeId = node.id();
@@ -225,6 +218,7 @@ cy.nodes('.theme')
             activeHoverSet.delete(nodeId);
           });
 
+          // Open link on tap
           cy.on('tap', 'node', function(evt){
             const node = evt.target;
             const url = node.data('url');
