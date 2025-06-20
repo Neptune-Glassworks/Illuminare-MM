@@ -12,12 +12,9 @@
       padding: 0;
       background: #92A0AC;
     }
-
     #cy {
       width: 100%;
       height: 100%;
-      touch-action: pinch-zoom;
-      overscroll-behavior: none;
     }
   </style>
 </head>
@@ -30,8 +27,6 @@
         const cy = cytoscape({
           container: document.getElementById('cy'),
           elements: data.elements,
-          wheelSensitivity: 0,              // disables zoom-on-scroll
-          userZoomingEnabled: true,        // enables gesture zooming
           style: [
             {
               selector: 'node.theme',
@@ -116,14 +111,16 @@
               }
             }
           ],
-          layout: { name: 'preset' }
+          layout: { name: 'preset' },
+          userZoomingEnabled: true,
+          wheelSensitivity: 0
         });
 
         const glowCooldown = new Set();
         const activeHoverSet = new Set();
 
         cy.ready(() => {
-          // Adjust edge curves based on distance
+          // Apply bezier curve layout manually
           const curveFactor = -0.35;
           cy.edges().forEach(edge => {
             const src = edge.source().position();
@@ -139,9 +136,10 @@
 
           cy.fit(undefined, 20);
 
-          // Animate dashed edges
+          // Animate edge dashes
           let dashOffset = 0;
           let frameCount = 0;
+
           function animateThemeToLampEdges() {
             frameCount++;
             if (frameCount % 3 === 0) {
@@ -156,31 +154,31 @@
             }
             requestAnimationFrame(animateThemeToLampEdges);
           }
+
           requestAnimationFrame(animateThemeToLampEdges);
 
-          // Allow scrolling through mind map container
+          // Allow vertical scrolling while blocking zoom-by-scroll
           cy.container().addEventListener('wheel', function(e) {
-            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.deltaY !== 0) {
-              e.stopImmediatePropagation(); // allow page scroll to work
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+              e.stopImmediatePropagation();
             }
           }, { passive: false });
 
-          // Highlight edges on theme hover
+          // Edge highlight on theme hover
           cy.nodes('.theme')
-            .on('mouseover', function(evt){
-              const node = evt.target;
-              node.connectedEdges().addClass('highlighted-edge');
+            .on('mouseover', function(evt) {
+              evt.target.connectedEdges().addClass('highlighted-edge');
             })
-            .on('mouseout', function(evt){
-              const node = evt.target;
-              node.connectedEdges().removeClass('highlighted-edge');
+            .on('mouseout', function(evt) {
+              evt.target.connectedEdges().removeClass('highlighted-edge');
             });
 
-          // Glow on hover
+          // Glow ring on hover
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeId = node.id();
             const glowId = 'glow-' + nodeId;
+
             if (!node.data('url') || node.hasClass('glow-ring')) return;
             if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
 
@@ -213,17 +211,13 @@
 
           cy.on('mouseout', 'node', function(evt) {
             const node = evt.target;
-            const nodeId = node.id();
-            activeHoverSet.delete(nodeId);
+            activeHoverSet.delete(node.id());
           });
 
-          // Clickable nodes
-          cy.on('tap', 'node', function(evt){
-            const node = evt.target;
-            const url = node.data('url');
-            if (url) {
-              window.open(url, '_blank');
-            }
+          // Click to open URL
+          cy.on('tap', 'node', function(evt) {
+            const url = evt.target.data('url');
+            if (url) window.open(url, '_blank');
           });
         });
       });
