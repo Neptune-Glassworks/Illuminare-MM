@@ -127,18 +127,23 @@
           cy.fit(undefined, 20);
           // --- Animate dashed edges from themes to lamps ---
             let dashOffset = 0;
+let frameCount = 0;
 
-            function animateThemeToLampEdges() {
-              dashOffset = (dashOffset + 1) % 40; // loop dash offset
+function animateThemeToLampEdges() {
+  frameCount++;
 
-              cy.edges().forEach(edge => {
-            const source = edge.source();
-            const target = edge.target();
+  // Slow down: update every 4 frames
+  if (frameCount % 4 === 0) {
+    dashOffset = (dashOffset - 1) % 40; // ⬅ reverse direction
+    cy.edges().forEach(edge => {
+      const source = edge.source();
+      const target = edge.target();
 
-    if (source.hasClass('theme') && target.hasClass('lamp')) {
-      edge.style('line-dash-offset', dashOffset);
-    }
-  });
+      if (source.hasClass('theme') && target.hasClass('lamp')) {
+        edge.style('line-dash-offset', dashOffset);
+      }
+    });
+  }
 
   requestAnimationFrame(animateThemeToLampEdges);
 }
