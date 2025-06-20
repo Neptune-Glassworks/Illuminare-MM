@@ -27,6 +27,7 @@
         const cy = cytoscape({
           container: document.getElementById('cy'),
           elements: data.elements,
+          layout: { name: 'preset' },
           style: [
             {
               selector: 'node.theme',
@@ -51,34 +52,16 @@
                 'height': 20,
                 'z-index': 0,
                 'shape': 'ellipse',
-                'events': 'no',  // prevent interaction issues
-                'label': ''       // no label on glow nodes
+                'events': 'no',
+                'label': ''
               }
             },
-            {
-              selector: 'node.lamp.chandelier',
-              style: { 'background-color': '#C5A68F', 'width': 30, 'height': 30 }
-            },
-            {
-              selector: 'node.lamp.pendant',
-              style: { 'background-color': '#C1D9ED', 'width': 30, 'height': 30 }
-            },
-            {
-              selector: 'node.lamp.sconce',
-              style: { 'background-color': '#FFE1CB', 'width': 30, 'height': 30 }
-            },
-            {
-              selector: 'node.lamp.table',
-              style: { 'background-color': '#E8ECD7', 'width': 30, 'height': 30 }
-            },
-            {
-              selector: 'node.lamp.floor',
-              style: { 'background-color': '#C5B48F', 'width': 30, 'height': 30 }
-            },
-            {
-              selector: 'node.lamp.outdoor',
-              style: { 'background-color': '#312517', 'width': 30, 'height': 30 }
-            },
+            { selector: 'node.lamp.chandelier', style: { 'background-color': '#C5A68F', 'width': 30, 'height': 30 }},
+            { selector: 'node.lamp.pendant', style: { 'background-color': '#C1D9ED', 'width': 30, 'height': 30 }},
+            { selector: 'node.lamp.sconce', style: { 'background-color': '#FFE1CB', 'width': 30, 'height': 30 }},
+            { selector: 'node.lamp.table', style: { 'background-color': '#E8ECD7', 'width': 30, 'height': 30 }},
+            { selector: 'node.lamp.floor', style: { 'background-color': '#C5B48F', 'width': 30, 'height': 30 }},
+            { selector: 'node.lamp.outdoor', style: { 'background-color': '#312517', 'width': 30, 'height': 30 }},
             {
               selector: 'node',
               style: {
@@ -97,54 +80,56 @@
                 'line-color': '#E1E7ED',
                 'line-style': 'dashed',
                 'opacity': 0.5,
-                'line-dash-pattern': [6, 4],  // Total pattern length = 10
+                'line-dash-pattern': [6, 4],
                 'curve-style': 'unbundled-bezier',
                 'edge-distances': 'node-position',
                 'control-point-distances': 0,
                 'control-point-weights': 0.5
               }
             },
-              {
-                selector: 'edge.highlighted-edge',
-                style: {
-                  'opacity': 1
-                }
+            {
+              selector: 'edge.highlighted-edge',
+              style: {
+                'opacity': 1
               }
-          ],
-          layout: { name: 'preset' },
-
-          userZoomingEnabled: true,
-        
+            }
+          ]
         });
 
-const cy = cytoscape({
-  container: document.getElementById('cy'),
-  elements: data.elements,
-  style: [...],
-  layout: { name: 'preset' }
-});
+        // ✅ SCROLL FIX (only pinch zoom, scroll passes through)
+        cy.userZoomingEnabled(true);
+        cy.zoomingEnabled(true);
+        cy.container().addEventListener('wheel', function (e) {
+          const isPinch = e.ctrlKey || e.metaKey;
+          if (!isPinch) {
+            e.stopPropagation();
+          }
+        }, { passive: true });
 
-// Place this right after initializing `cy`
-cy.userZoomingEnabled(true);
-cy.zoomingEnabled(true);
-cy.container().addEventListener('wheel', function (e) {
-  const isPinch = e.ctrlKey || e.metaKey;
-  if (!isPinch) {
-    e.stopPropagation();
-  }
-}, { passive: true });
-
-// Continue with rest of setup
-cy.ready(() => {
-  ...
-});
-
-        
         const glowCooldown = new Set();
         const activeHoverSet = new Set();
 
+        // Animate dashed edges
+        let dashOffset = 0;
+        let frameCount = 0;
+        function animateThemeToLampEdges() {
+          frameCount++;
+          if (frameCount % 3 === 0) {
+            dashOffset = (dashOffset - 1 + 10) % 10;
+            cy.edges().forEach(edge => {
+              const source = edge.source();
+              const target = edge.target();
+              if (source.hasClass('theme') && target.hasClass('lamp')) {
+                edge.style('line-dash-offset', dashOffset);
+              }
+            });
+          }
+          requestAnimationFrame(animateThemeToLampEdges);
+        }
+        requestAnimationFrame(animateThemeToLampEdges);
+
         cy.ready(() => {
-          // curve factor for bezier edges
+          // Curve edges
           const curveFactor = -0.35;
           cy.edges().forEach(edge => {
             const src = edge.source().position();
@@ -159,49 +144,14 @@ cy.ready(() => {
           });
 
           cy.fit(undefined, 20);
-          // --- Animate dashed edges from themes to lamps ---
-            let dashOffset = 0;
-let frameCount = 0;
 
-function animateThemeToLampEdges() {
-  frameCount++;
-
-  // Adjust speed here (every 3 frames)
-  if (frameCount % 3 === 0) {
-    dashOffset = (dashOffset - 1 + 10) % 10; // Wrap at 10 to sync with pattern
-    cy.edges().forEach(edge => {
-      const source = edge.source();
-      const target = edge.target();
-
-      if (source.hasClass('theme') && target.hasClass('lamp')) {
-        edge.style('line-dash-offset', dashOffset);
-      }
-    });
-  }
-
-  requestAnimationFrame(animateThemeToLampEdges);
-
-          
-
-// Theme node edge highlighting
-cy.nodes('.theme')
-  .on('mouseover', function(evt){
-    const node = evt.target;
-    node.connectedEdges().addClass('highlighted-edge');
-  })
-  .on('mouseout', function(evt){
-    const node = evt.target;
-    node.connectedEdges().removeClass('highlighted-edge');
-  });
-          
+          // Hover glow effect
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeId = node.id();
             const glowId = 'glow-' + nodeId;
-
             if (!node.data('url') || node.hasClass('glow-ring')) return;
             if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
-
             activeHoverSet.add(nodeId);
             glowCooldown.add(glowId);
 
@@ -230,18 +180,25 @@ cy.nodes('.theme')
           });
 
           cy.on('mouseout', 'node', function(evt) {
-            const node = evt.target;
-            const nodeId = node.id();
+            const nodeId = evt.target.id();
             activeHoverSet.delete(nodeId);
           });
 
-          cy.on('tap', 'node', function(evt){
-            const node = evt.target;
-            const url = node.data('url');
+          cy.on('tap', 'node', function(evt) {
+            const url = evt.target.data('url');
             if (url) {
               window.open(url, '_blank');
             }
           });
+
+          // Highlight edges on theme hover
+          cy.nodes('.theme')
+            .on('mouseover', function(evt) {
+              evt.target.connectedEdges().addClass('highlighted-edge');
+            })
+            .on('mouseout', function(evt) {
+              evt.target.connectedEdges().removeClass('highlighted-edge');
+            });
         });
       });
   </script>
