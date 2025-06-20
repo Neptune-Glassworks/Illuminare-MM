@@ -114,9 +114,32 @@
           layout: { name: 'preset' },
 
           userZoomingEnabled: true,
-          wheelSensitivity: 0  // 👈 disables zoom-on-scroll
+        
         });
 
+const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: data.elements,
+  style: [...],
+  layout: { name: 'preset' }
+});
+
+// Place this right after initializing `cy`
+cy.userZoomingEnabled(true);
+cy.zoomingEnabled(true);
+cy.container().addEventListener('wheel', function (e) {
+  const isPinch = e.ctrlKey || e.metaKey;
+  if (!isPinch) {
+    e.stopPropagation();
+  }
+}, { passive: true });
+
+// Continue with rest of setup
+cy.ready(() => {
+  ...
+});
+
+        
         const glowCooldown = new Set();
         const activeHoverSet = new Set();
 
@@ -158,15 +181,6 @@ function animateThemeToLampEdges() {
 
   requestAnimationFrame(animateThemeToLampEdges);
 
-        // Allow vertical page scroll when hovering over Cytoscape container
-        cy.container().addEventListener('wheel', function (e) {
-          if (!e.ctrlKey && !e.metaKey && !e.shiftKey && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-            e.stopImmediatePropagation(); // Allow vertical scroll to pass through
-          }
-        }, { passive: false });
-}
-
-requestAnimationFrame(animateThemeToLampEdges);
           
 
 // Theme node edge highlighting
