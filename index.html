@@ -42,21 +42,19 @@
                 'height': 36
               }
             },
-
-            
             {
-  selector: '.glow-ring',
-  style: {
-    'background-color': '#ffffff',
-    'opacity': 0.25,
-    'width': 20,
-    'height': 20,
-    'z-index': 0,
-    'shape': 'ellipse'
-  }
-},
-            
-
+              selector: '.glow-ring',
+              style: {
+                'background-color': '#ffffff',
+                'opacity': 0.25,
+                'width': 20,
+                'height': 20,
+                'z-index': 0,
+                'shape': 'ellipse',
+                'events': 'no',  // prevent interaction issues
+                'label': ''       // no label on glow nodes
+              }
+            },
             {
               selector: 'node.lamp.chandelier',
               style: { 'background-color': '#B7946A', 'width': 20, 'height': 20 }
@@ -81,8 +79,6 @@
               selector: 'node.lamp.outdoor',
               style: { 'background-color': '#312517', 'width': 20, 'height': 20 }
             },
- 
-            
             {
               selector: 'node',
               style: {
@@ -110,16 +106,12 @@
           layout: { name: 'preset' }
         });
 
-        const curveFactor = -0.35;
-
-const glowCooldown = new Set();
-const recentlyGlowed = new Set();
-const currentlyHoveredNodes = new Set(); // 👈 NEW
-let lastHoveredNodeId = null;
-
-
+        const glowCooldown = new Set();
+        const activeHoverSet = new Set();
 
         cy.ready(() => {
+          // curve factor for bezier edges
+          const curveFactor = -0.35;
           cy.edges().forEach(edge => {
             const src = edge.source().position();
             const tgt = edge.target().position();
@@ -131,74 +123,58 @@ let lastHoveredNodeId = null;
               'control-point-weights': [0.5]
             });
           });
+
           cy.fit(undefined, 20);
-          
-          // Add hover class on mouseover if node has a URL
-const hoveredNodes = new Set(); // <- replace lastHoveredNodeId
 
-cy.on('mouseover', 'node', function(evt) {
-  const node = evt.target;
-  const nodeId = node.id();
-  const glowId = 'glow-' + nodeId;
+          cy.on('mouseover', 'node', function(evt) {
+            const node = evt.target;
+            const nodeId = node.id();
+            const glowId = 'glow-' + nodeId;
 
-  if (!node.data('url') || node.hasClass('glow-ring')) return;
+            if (!node.data('url') || node.hasClass('glow-ring')) return;
+            if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
 
-  // ✅ Skip if already hovered
-  if (hoveredNodes.has(nodeId)) return;
-  hoveredNodes.add(nodeId);
+            activeHoverSet.add(nodeId);
+            glowCooldown.add(glowId);
 
-  // ✅ Skip if in cooldown
-  if (glowCooldown.has(glowId)) return;
-  glowCooldown.add(glowId);
+            cy.add({
+              group: 'nodes',
+              data: { id: glowId },
+              position: node.position(),
+              classes: 'glow-ring'
+            });
 
-  cy.add({
-    group: 'nodes',
-    data: { id: glowId },
-    position: node.position(),
-    classes: 'glow-ring'
-  });
+            const glow = cy.getElementById(glowId);
+            glow.animate({
+              style: {
+                'width': node.width() * 5,
+                'height': node.height() * 5,
+                'opacity': 0
+              }
+            }, {
+              duration: 600,
+              easing: 'ease-out',
+              complete: () => {
+                glow.remove();
+                glowCooldown.delete(glowId);
+              }
+            });
+          });
 
-  const glow = cy.getElementById(glowId);
-  glow.animate({
-    style: {
-      'width': node.width() * 6,
-      'height': node.height() * 6,
-      'opacity': 0
-    }
-  }, {
-    duration: 1200,
-    easing: 'ease-out',
-    complete: () => {
-      glow.remove();
-      glowCooldown.delete(glowId);
-      recentlyGlowed.add(glowId);
-      setTimeout(() => recentlyGlowed.delete(glowId), 500);
-    }
-  });
-});
+          cy.on('mouseout', 'node', function(evt) {
+            const node = evt.target;
+            const nodeId = node.id();
+            activeHoverSet.delete(nodeId);
+          });
 
-cy.on('mouseout', 'node', function(evt) {
-  const node = evt.target;
-  const nodeId = node.id();
-  const glowId = 'glow-' + nodeId;
-
-  // ✅ Properly reset hover state
-  hoveredNodes.delete(nodeId);
-});
-
-
-
-
+          cy.on('tap', 'node', function(evt){
+            const node = evt.target;
+            const url = node.data('url');
+            if (url) {
+              window.open(url, '_blank');
+            }
+          });
         });
-          // 👇 Make nodes clickable if they have a URL
-  cy.on('tap', 'node', function(evt){
-    const node = evt.target;
-    const url = node.data('url');
-    if (url) {
-      window.open(url, '_blank');
-    }
-  });
-
       });
   </script>
 </body>
