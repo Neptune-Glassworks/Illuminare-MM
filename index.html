@@ -198,19 +198,20 @@ cy.on('mouseout', 'node', function(evt) {
 
   if (recentlyGlowed.has(glowId)) return; // Prevent exit-triggered retrigger
 
-  if (node.data('url')) {
-    node.removeClass('hover');
-    node.animate({
-      style: {
-        'border-width': 0,
-        'width': node.hasClass('theme') ? 36 : 20,
-        'height': node.hasClass('theme') ? 36 : 20
-      }
-    }, {
-      duration: 300,
-      easing: 'ease-in-out'
-    });
-  }
+ if (node.data('url') && node.hasClass('hover')) {
+  node.removeClass('hover');
+  node.animate({
+    style: {
+      'border-width': 0,
+      'width': node.hasClass('theme') ? 36 : 20,
+      'height': node.hasClass('theme') ? 36 : 20
+    }
+  }, {
+    duration: 300,
+    easing: 'ease-in-out'
+  });
+}
+
 });
 
 
