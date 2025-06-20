@@ -103,7 +103,13 @@
                 'control-point-distances': 0,
                 'control-point-weights': 0.5
               }
-            }
+            },
+              {
+                selector: 'edge.highlighted-edge',
+                style: {
+                  'opacity': 1
+                }
+              }
           ],
           layout: { name: 'preset' }
         });
@@ -153,6 +159,17 @@ function animateThemeToLampEdges() {
 requestAnimationFrame(animateThemeToLampEdges);
           
 
+// Theme node edge highlighting
+cy.nodes('.theme')
+  .on('mouseover', function(evt){
+    const node = evt.target;
+    node.connectedEdges().addClass('highlighted-edge');
+  })
+  .on('mouseout', function(evt){
+    const node = evt.target;
+    node.connectedEdges().removeClass('highlighted-edge');
+  });
+          
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeId = node.id();
