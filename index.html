@@ -125,6 +125,26 @@
           });
 
           cy.fit(undefined, 20);
+          // --- Animate dashed edges from themes to lamps ---
+            let dashOffset = 0;
+
+            function animateThemeToLampEdges() {
+              dashOffset = (dashOffset + 1) % 40; // loop dash offset
+
+              cy.edges().forEach(edge => {
+            const source = edge.source();
+            const target = edge.target();
+
+    if (source.hasClass('theme') && target.hasClass('lamp')) {
+      edge.style('line-dash-offset', dashOffset);
+    }
+  });
+
+  requestAnimationFrame(animateThemeToLampEdges);
+}
+
+requestAnimationFrame(animateThemeToLampEdges);
+          
 
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
