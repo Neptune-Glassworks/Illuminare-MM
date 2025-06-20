@@ -97,7 +97,7 @@
         });
 
         // ✅ Only pinch zoom allowed — scroll passes through
-        cy.userZoomingEnabled(true);
+        cy.userZoomingEnabled(false);
         cy.zoomingEnabled(true);
         cy.container().addEventListener('wheel', function (e) {
           const isPinch = e.ctrlKey || e.metaKey;
