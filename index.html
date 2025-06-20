@@ -148,7 +148,10 @@ cy.on('mouseover', 'node', function(evt) {
   // Avoid triggering on the glow ring or non-clickable nodes
   if (!node.data('url') || node.hasClass('glow-ring')) return;
 
-  node.addClass('hover');
+    if (!glowCooldown.has(glowId)) {
+    node.addClass('hover');
+  }
+
 
   const glowId = 'glow-' + node.id();
 
@@ -178,10 +181,11 @@ cy.on('mouseover', 'node', function(evt) {
     complete: () => {
   glow.remove();
   glowCooldown.delete(glowId);
-
+  node.removeClass('hover'); // <-- forcibly remove hover after pulse
   recentlyGlowed.add(glowId);
-  setTimeout(() => recentlyGlowed.delete(glowId), 500); // Prevent retrigger on exit
+  setTimeout(() => recentlyGlowed.delete(glowId), 500);
 }
+
 
   });
 });
