@@ -96,6 +96,7 @@
                 'width': 1.5,
                 'line-color': '#E1E7ED',
                 'line-style': 'dashed',
+                'line-dash-pattern': [6, 4],  // Total pattern length = 10
                 'curve-style': 'unbundled-bezier',
                 'edge-distances': 'node-position',
                 'control-point-distances': 0,
@@ -132,9 +133,9 @@ let frameCount = 0;
 function animateThemeToLampEdges() {
   frameCount++;
 
-  // Slow down: update every 4 frames
-  if (frameCount % 4 === 0) {
-    dashOffset = (dashOffset - 1) % 40; // ⬅ reverse direction
+  // Adjust speed here (every 3 frames)
+  if (frameCount % 3 === 0) {
+    dashOffset = (dashOffset - 1 + 10) % 10; // Wrap at 10 to sync with pattern
     cy.edges().forEach(edge => {
       const source = edge.source();
       const target = edge.target();
