@@ -96,7 +96,7 @@
           ]
         });
 
-        // ✅ SCROLL FIX (only pinch zoom, scroll passes through)
+        // ✅ Only pinch zoom allowed — scroll passes through
         cy.userZoomingEnabled(true);
         cy.zoomingEnabled(true);
         cy.container().addEventListener('wheel', function (e) {
@@ -109,7 +109,7 @@
         const glowCooldown = new Set();
         const activeHoverSet = new Set();
 
-        // Animate dashed edges
+        // 🌀 Animate dashed edges
         let dashOffset = 0;
         let frameCount = 0;
         function animateThemeToLampEdges() {
@@ -126,10 +126,10 @@
           }
           requestAnimationFrame(animateThemeToLampEdges);
         }
-
+        animateThemeToLampEdges(); // 👈 One and only call
 
         cy.ready(() => {
-          // Curve edges
+          // 🎯 Curve edges based on distance
           const curveFactor = -0.35;
           cy.edges().forEach(edge => {
             const src = edge.source().position();
@@ -145,13 +145,14 @@
 
           cy.fit(undefined, 20);
 
-          // Hover glow effect
+          // 🌟 Glow on node hover
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeId = node.id();
             const glowId = 'glow-' + nodeId;
             if (!node.data('url') || node.hasClass('glow-ring')) return;
             if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
+
             activeHoverSet.add(nodeId);
             glowCooldown.add(glowId);
 
@@ -180,23 +181,21 @@
           });
 
           cy.on('mouseout', 'node', function(evt) {
-            const nodeId = evt.target.id();
-            activeHoverSet.delete(nodeId);
+            activeHoverSet.delete(evt.target.id());
           });
 
+          // 🔗 Open links
           cy.on('tap', 'node', function(evt) {
             const url = evt.target.data('url');
-            if (url) {
-              window.open(url, '_blank');
-            }
+            if (url) window.open(url, '_blank');
           });
 
-          // Highlight edges on theme hover
+          // ✨ Highlight theme edges on hover
           cy.nodes('.theme')
-            .on('mouseover', function(evt) {
+            .on('mouseover', evt => {
               evt.target.connectedEdges().addClass('highlighted-edge');
             })
-            .on('mouseout', function(evt) {
+            .on('mouseout', evt => {
               evt.target.connectedEdges().removeClass('highlighted-edge');
             });
         });
@@ -204,4 +203,3 @@
   </script>
 </body>
 </html>
-
