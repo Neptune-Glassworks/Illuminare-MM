@@ -223,7 +223,8 @@
           "degree_layout": 3,
           "name": "Rain Chandelier",
           "SUID": 3645,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-menu/chandeliers#rain-chandelier"
         },
         "position": {
           "x": -169.0362629727326,
@@ -231,7 +232,6 @@
         },
         "selected": false,
         "classes": "lamp chandelier",
-        "url": "https://www.neptuneglassworks.com/lighting-menu/chandeliers#rain-chandelier"
       },
       {
         "data": {
@@ -256,7 +256,8 @@
           "degree_layout": 3,
           "name": "Tower Chandelier",
           "SUID": 3641,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-menu/chandeliers#tower-chandelier"
         },
         "position": {
           "x": 44.612003598439046,
