@@ -120,6 +120,22 @@
             });
           });
           cy.fit(undefined, 20);
+          // Add hover class on mouseover if node has a URL
+cy.on('mouseover', 'node', function(evt) {
+  const node = evt.target;
+  if (node.data('url')) {
+    node.addClass('hover');
+  }
+});
+
+// Remove hover class on mouseout
+cy.on('mouseout', 'node', function(evt) {
+  const node = evt.target;
+  if (node.data('url')) {
+    node.removeClass('hover');
+  }
+});
+
         });
           // 👇 Make nodes clickable if they have a URL
   cy.on('tap', 'node', function(evt){
