@@ -81,18 +81,7 @@
               selector: 'node.lamp.outdoor',
               style: { 'background-color': '#312517', 'width': 20, 'height': 20 }
             },
-   //hover thing         
-           {
-  selector: 'node.hover',
-  style: {
-    'border-width': 2,
-    'border-color': '#ffffff',
-    'border-opacity': 1,
-    'overlay-color': '#ffffff',
-    'overlay-opacity': 0.15
-  }
-},
-// end of hover
+ 
             
             {
               selector: 'node',
@@ -151,9 +140,7 @@ cy.on('mouseover', 'node', function(evt) {
   const glowId = 'glow-' + node.id(); // ✅ Moved this up
 
   // Only add hover if we’re not currently in cooldown
-  if (!glowCooldown.has(glowId)) {
-    node.addClass('hover');
-  }
+
 
   // If it's cooling down, do not re-trigger
   if (glowCooldown.has(glowId)) return;
@@ -181,7 +168,7 @@ cy.on('mouseover', 'node', function(evt) {
     complete: () => {
       glow.remove();
       glowCooldown.delete(glowId);
-      node.removeClass('hover'); // ⬅ Ends border/overlay after pulse
+      
       recentlyGlowed.add(glowId);
       setTimeout(() => recentlyGlowed.delete(glowId), 500);
     }
@@ -199,17 +186,8 @@ cy.on('mouseout', 'node', function(evt) {
   if (recentlyGlowed.has(glowId)) return; // Prevent exit-triggered retrigger
 
  if (node.data('url') && node.hasClass('hover')) {
-  node.removeClass('hover');
-  node.animate({
-    style: {
-      'border-width': 0,
-      'width': node.hasClass('theme') ? 36 : 20,
-      'height': node.hasClass('theme') ? 36 : 20
-    }
-  }, {
-    duration: 300,
-    easing: 'ease-in-out'
-  });
+ 
+ 
 }
 
 });
