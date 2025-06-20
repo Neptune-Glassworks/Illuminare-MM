@@ -148,12 +148,12 @@ cy.on('mouseover', 'node', function(evt) {
   // Avoid triggering on the glow ring or non-clickable nodes
   if (!node.data('url') || node.hasClass('glow-ring')) return;
 
-    if (!glowCooldown.has(glowId)) {
+  const glowId = 'glow-' + node.id(); // ✅ Moved this up
+
+  // Only add hover if we’re not currently in cooldown
+  if (!glowCooldown.has(glowId)) {
     node.addClass('hover');
   }
-
-
-  const glowId = 'glow-' + node.id();
 
   // If it's cooling down, do not re-trigger
   if (glowCooldown.has(glowId)) return;
@@ -179,16 +179,15 @@ cy.on('mouseover', 'node', function(evt) {
     duration: 600,
     easing: 'ease-out',
     complete: () => {
-  glow.remove();
-  glowCooldown.delete(glowId);
-  node.removeClass('hover'); // <-- forcibly remove hover after pulse
-  recentlyGlowed.add(glowId);
-  setTimeout(() => recentlyGlowed.delete(glowId), 500);
-}
-
-
+      glow.remove();
+      glowCooldown.delete(glowId);
+      node.removeClass('hover'); // ⬅ Ends border/overlay after pulse
+      recentlyGlowed.add(glowId);
+      setTimeout(() => recentlyGlowed.delete(glowId), 500);
+    }
   });
 });
+
 
 
 
