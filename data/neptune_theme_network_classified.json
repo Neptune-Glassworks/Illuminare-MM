@@ -306,7 +306,8 @@
           "degree_layout": 2,
           "name": "Auralith Pendant",
           "SUID": 3635,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/auralith-pendant"
         },
         "position": {
           "x": 610.9661815157625,
@@ -323,6 +324,7 @@
           "name": "Orbital Pendant",
           "SUID": 3633,
           "selected": false
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/orbital-pendant"
         },
         "position": {
           "x": 650.5424734532983,
@@ -338,7 +340,8 @@
           "degree_layout": 2,
           "name": "Phase Pendant",
           "SUID": 3631,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/phase-pendant"
         },
         "position": {
           "x": 581.3809722951859,
@@ -354,7 +357,8 @@
           "degree_layout": 2,
           "name": "Tower Pendant",
           "SUID": 3629,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/tower-pendant"
         },
         "position": {
           "x": -600.896756532069,
@@ -370,7 +374,8 @@
           "degree_layout": 2,
           "name": "Kanagawa Pendant",
           "SUID": 3627,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/kanagawa-pendant"
         },
         "position": {
           "x": -652.8585280851376,
@@ -386,7 +391,8 @@
           "degree_layout": 2,
           "name": "Hyphae Cone Pendant",
           "SUID": 3625,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/hyphae-cone-pendant"
         },
         "position": {
           "x": -283.6065634168118,
@@ -402,7 +408,8 @@
           "degree_layout": 2,
           "name": "Link Pendant",
           "SUID": 3623,
-          "selected": false
+          "selected": false,
+          "url": "https://www.neptuneglassworks.com/lighting-shop/p/link-pendant"
         },
         "position": {
           "x": -677.4725100341341,
