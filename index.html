@@ -114,6 +114,8 @@
 
 const glowCooldown = new Set();
 const recentlyGlowed = new Set();
+const currentlyHoveredNodes = new Set(); // 👈 NEW
+
 
 
         cy.ready(() => {
@@ -133,21 +135,19 @@ const recentlyGlowed = new Set();
           // Add hover class on mouseover if node has a URL
 cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
+  const glowId = 'glow-' + node.id();
 
-  // Avoid triggering on the glow ring or non-clickable nodes
   if (!node.data('url') || node.hasClass('glow-ring')) return;
 
-  const glowId = 'glow-' + node.id(); // ✅ Moved this up
+  // 👇 Prevent multiple triggers if still hovering
+  if (currentlyHoveredNodes.has(node.id())) return;
+  currentlyHoveredNodes.add(node.id());
 
-  // Only add hover if we’re not currently in cooldown
-
-
-  // If it's cooling down, do not re-trigger
+  // 👇 Prevent retrigger if recently animated
   if (glowCooldown.has(glowId)) return;
-
   glowCooldown.add(glowId);
 
-  // Create a glowing ring
+  // Create glow effect
   cy.add({
     group: 'nodes',
     data: { id: glowId },
@@ -168,7 +168,6 @@ cy.on('mouseover', 'node', function(evt) {
     complete: () => {
       glow.remove();
       glowCooldown.delete(glowId);
-      
       recentlyGlowed.add(glowId);
       setTimeout(() => recentlyGlowed.delete(glowId), 500);
     }
@@ -179,13 +178,17 @@ cy.on('mouseover', 'node', function(evt) {
 
 
 
+
 cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
   const glowId = 'glow-' + node.id();
 
+  currentlyHoveredNodes.delete(node.id()); // 👈 Reset hover state on exit
+
   // Prevent any fallback hover retrigger or animation
   if (recentlyGlowed.has(glowId)) return;
 });
+
 
 
 
