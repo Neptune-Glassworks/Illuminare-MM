@@ -183,14 +183,10 @@ cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
   const glowId = 'glow-' + node.id();
 
-  if (recentlyGlowed.has(glowId)) return; // Prevent exit-triggered retrigger
-
- if (node.data('url') && node.hasClass('hover')) {
- 
- 
-}
-
+  // Prevent any fallback hover retrigger or animation
+  if (recentlyGlowed.has(glowId)) return;
 });
+
 
 
 
