@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Illuminare Mind Map</title>
+  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #92A0AC;
+    }
+    #cy {
+      width: 100%;
+      height: 100%;
+      touch-action: pan-y;
+    }
+  </style>
+</head>
+<body>
+  <div id="cy"></div>
+  <script>
+    fetch('data/neptune_theme_network_classified.json')
+      .then(res => res.json())
+      .then(data => {
+        const cy = cytoscape({
+          container: document.getElementById('cy'),
+          elements: data.elements,
+          style: [
+            {
+              selector: 'node.theme',
+              style: {
+                'background-color': '#525B44',
+                'label': 'data(name)',
+                'font-size': 20,
+                'text-valign': 'center',
+                'color': '#FFF',
+                'text-outline-color': '#333',
+                'text-outline-width': 1,
+                'width': 46,
+                'height': 46
+              }
+            },
+            {
+              selector: '.glow-ring',
+              style: {
+                'background-color': '#FFD700',
+                'opacity': 0.25,
+                'width': 20,
+                'height': 20,
+                'z-index': 0,
+                'shape': 'ellipse',
+                'events': 'no',  // prevent interaction issues
+                'label': ''       // no label on glow nodes
+              }
+            },
+            {
+              selector: 'node.lamp.chandelier',
+              style: { 'background-color': '#C5A68F', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.pendant',
+              style: { 'background-color': '#C1D9ED', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.sconce',
+              style: { 'background-color': '#FFE1CB', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.table',
+              style: { 'background-color': '#E8ECD7', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.floor',
+              style: { 'background-color': '#C5B48F', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.outdoor',
+              style: { 'background-color': '#312517', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node',
+              style: {
+                'label': 'data(name)',
+                'font-size': 16,
+                'text-valign': 'center',
+                'color': '#FFF',
+                'text-outline-color': '#333',
+                'text-outline-width': 1
+              }
+            },
+            {
+              selector: 'edge',
+              style: {
+                'width': 1.5,
+                'line-color': '#E1E7ED',
+                'line-style': 'dashed',
+                'opacity': 0.5,
+                'line-dash-pattern': [6, 4],  // Total pattern length = 10
+                'curve-style': 'unbundled-bezier',
+                'edge-distances': 'node-position',
+                'control-point-distances': 0,
+                'control-point-weights': 0.5
+              }
+            },
+              {
+                selector: 'edge.highlighted-edge',
+                style: {
+                  'opacity': 1
+                }
+              }
+          ],
+          layout: { name: 'preset' },
+          userZoomingEnabled: true,
+          wheelSensitivity: 0.1,
+          motionBlur: false,
+          autoungrabify: false,
+
+          userZoomingEnabled: true,
+          wheelSensitivity: 0  // 👈 disables zoom-on-scroll
+        });
+
+        const glowCooldown = new Set();
+        const activeHoverSet = new Set();
+
+        cy.ready(() => {
+          // curve factor for bezier edges
+          const curveFactor = -0.35;
+          cy.edges().forEach(edge => {
+            const src = edge.source().position();
+            const tgt = edge.target().position();
+            const dx = tgt.x - src.x;
+            const dy = tgt.y - src.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            edge.style({
+              'control-point-distances': [curveFactor * dist],
+              'control-point-weights': [0.5]
+            });
+          });
+
+          cy.fit(undefined, 20);
+          // --- Animate dashed edges from themes to lamps ---
+            let dashOffset = 0;
+let frameCount = 0;
+
+function animateThemeToLampEdges() {
+  frameCount++;
+
+  // Adjust speed here (every 3 frames)
+  if (frameCount % 3 === 0) {
+    dashOffset = (dashOffset - 1 + 10) % 10; // Wrap at 10 to sync with pattern
+    cy.edges().forEach(edge => {
+      const source = edge.source();
+      const target = edge.target();
+
+      if (source.hasClass('theme') && target.hasClass('lamp')) {
+        edge.style('line-dash-offset', dashOffset);
+      }
+    });
+  }
+
+  requestAnimationFrame(animateThemeToLampEdges);
+}
+
+requestAnimationFrame(animateThemeToLampEdges);
+          
+
+// Theme node edge highlighting
+cy.nodes('.theme')
+  .on('mouseover', function(evt){
+    const node = evt.target;
+    node.connectedEdges().addClass('highlighted-edge');
+  })
+  .on('mouseout', function(evt){
+    const node = evt.target;
+    node.connectedEdges().removeClass('highlighted-edge');
+  });
+          
+          cy.on('mouseover', 'node', function(evt) {
+            const node = evt.target;
+            const nodeId = node.id();
+            const glowId = 'glow-' + nodeId;
+
+            if (!node.data('url') || node.hasClass('glow-ring')) return;
+            if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
+
+            activeHoverSet.add(nodeId);
+            glowCooldown.add(glowId);
+
+            cy.add({
+              group: 'nodes',
+              data: { id: glowId },
+              position: node.position(),
+              classes: 'glow-ring'
+            });
+
+            const glow = cy.getElementById(glowId);
+            glow.animate({
+              style: {
+                'width': node.width() * 5,
+                'height': node.height() * 5,
+                'opacity': 0
+              }
+            }, {
+              duration: 600,
+              easing: 'ease-out',
+              complete: () => {
+                glow.remove();
+                glowCooldown.delete(glowId);
+              }
+            });
+          });
+
+          cy.on('mouseout', 'node', function(evt) {
+            const node = evt.target;
+            const nodeId = node.id();
+            activeHoverSet.delete(nodeId);
+          });
+
+          cy.on('tap', 'node', function(evt){
+            const node = evt.target;
+            const url = node.data('url');
+            if (url) {
+              window.open(url, '_blank');
+            }
+          });
+        });
+      });
+  </script>
+</body>
+</html>
