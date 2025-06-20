@@ -181,7 +181,6 @@ cy.on('mouseover', 'node', function(evt) {
 
 
 
-
 cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
   const glowId = 'glow-' + node.id();
@@ -191,8 +190,6 @@ cy.on('mouseout', 'node', function(evt) {
 
   if (recentlyGlowed.has(glowId)) return;
 });
-
-
 
 
 
