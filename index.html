@@ -123,8 +123,9 @@
 
         const curveFactor = -0.35;
 
+const glowCooldown = new Set();
+const recentlyGlowed = new Set();
 
-        const glowCooldown = new Set();
 
         cy.ready(() => {
           cy.edges().forEach(edge => {
@@ -175,9 +176,13 @@ cy.on('mouseover', 'node', function(evt) {
     duration: 600,
     easing: 'ease-out',
     complete: () => {
-      glow.remove();
-      glowCooldown.delete(glowId); // Allow retrigger after animation completes
-    }
+  glow.remove();
+  glowCooldown.delete(glowId);
+
+  recentlyGlowed.add(glowId);
+  setTimeout(() => recentlyGlowed.delete(glowId), 500); // Prevent retrigger on exit
+}
+
   });
 });
 
@@ -186,6 +191,10 @@ cy.on('mouseover', 'node', function(evt) {
 
 cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
+  const glowId = 'glow-' + node.id();
+
+  if (recentlyGlowed.has(glowId)) return; // Prevent exit-triggered retrigger
+
   if (node.data('url')) {
     node.removeClass('hover');
     node.animate({
@@ -200,6 +209,7 @@ cy.on('mouseout', 'node', function(evt) {
     });
   }
 });
+
 
 
         });
