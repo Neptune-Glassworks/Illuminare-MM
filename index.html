@@ -70,21 +70,19 @@
             {
   selector: 'node[url]',
   style: {
-    'cursor': 'pointer',
-    'border-width': 2,
-    'border-color': '#ffffff',
-    'border-opacity': 0.7,
-    'overlay-padding': '4',
-    'overlay-color': '#ffffff',
-    'overlay-opacity': 0
+    'border-width': 0, // no border by default
+    'overlay-opacity': 0, // no glow by default
+    'cursor': 'pointer'
   }
 },
 {
   selector: 'node[url]:hover',
   style: {
+    'border-width': 2,
     'border-color': '#ffffff',
     'border-opacity': 1,
-    'overlay-opacity': 0.15
+    'overlay-color': '#ffffff',
+    'overlay-opacity': 0.2
   }
 },           
 // end of hover
