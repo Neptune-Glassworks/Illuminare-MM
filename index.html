@@ -122,6 +122,10 @@
         });
 
         const curveFactor = -0.35;
+
+
+        const glowCooldown = new Set();
+
         cy.ready(() => {
           cy.edges().forEach(edge => {
             const src = edge.source().position();
@@ -140,17 +144,19 @@
 cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
 
-  // Avoid triggering on the glow ring itself
+  // Avoid triggering on the glow ring or non-clickable nodes
   if (!node.data('url') || node.hasClass('glow-ring')) return;
 
   node.addClass('hover');
 
   const glowId = 'glow-' + node.id();
 
-  // Avoid duplicate glow nodes
-  if (cy.getElementById(glowId).length > 0) return;
+  // If it's cooling down, do not re-trigger
+  if (glowCooldown.has(glowId)) return;
 
-  // Create a glowing ring as a separate node
+  glowCooldown.add(glowId);
+
+  // Create a glowing ring
   cy.add({
     group: 'nodes',
     data: { id: glowId },
@@ -168,9 +174,13 @@ cy.on('mouseover', 'node', function(evt) {
   }, {
     duration: 600,
     easing: 'ease-out',
-    complete: () => glow.remove()
+    complete: () => {
+      glow.remove();
+      glowCooldown.delete(glowId); // Allow retrigger after animation completes
+    }
   });
 });
+
 
 
 
