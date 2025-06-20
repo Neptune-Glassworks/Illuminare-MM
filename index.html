@@ -139,33 +139,39 @@
           // Add hover class on mouseover if node has a URL
 cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
-  if (node.data('url')) {
-    node.addClass('hover');
 
-    const glowId = 'glow-' + node.id();
+  // Avoid triggering on the glow ring itself
+  if (!node.data('url') || node.hasClass('glow-ring')) return;
 
-    // Create a glowing ring as a separate node
-    cy.add({
-      group: 'nodes',
-      data: { id: glowId },
-      position: node.position(),
-      classes: 'glow-ring'
-    });
+  node.addClass('hover');
 
-    const glow = cy.getElementById(glowId);
-    glow.animate({
-      style: {
-        'width': node.width() * 3,
-        'height': node.height() * 3,
-        'opacity': 0
-      }
-    }, {
-      duration: 600,
-      easing: 'ease-out',
-      complete: () => glow.remove()
-    });
-  }
+  const glowId = 'glow-' + node.id();
+
+  // Avoid duplicate glow nodes
+  if (cy.getElementById(glowId).length > 0) return;
+
+  // Create a glowing ring as a separate node
+  cy.add({
+    group: 'nodes',
+    data: { id: glowId },
+    position: node.position(),
+    classes: 'glow-ring'
+  });
+
+  const glow = cy.getElementById(glowId);
+  glow.animate({
+    style: {
+      'width': node.width() * 3,
+      'height': node.height() * 3,
+      'opacity': 0
+    }
+  }, {
+    duration: 600,
+    easing: 'ease-out',
+    complete: () => glow.remove()
+  });
 });
+
 
 
 cy.on('mouseout', 'node', function(evt) {
