@@ -134,23 +134,23 @@ let lastHoveredNodeId = null;
           cy.fit(undefined, 20);
           
           // Add hover class on mouseover if node has a URL
+const hoveredNodes = new Set(); // <- replace lastHoveredNodeId
+
 cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
   const nodeId = node.id();
   const glowId = 'glow-' + nodeId;
 
-  // Ignore if no URL or glow ring
   if (!node.data('url') || node.hasClass('glow-ring')) return;
 
-  // ✅ Only proceed if this is a new node hover
-  if (lastHoveredNodeId === nodeId) return;
-  lastHoveredNodeId = nodeId;
+  // ✅ Skip if already hovered
+  if (hoveredNodes.has(nodeId)) return;
+  hoveredNodes.add(nodeId);
 
-  // ✅ Prevent triggering during cooldown
+  // ✅ Skip if in cooldown
   if (glowCooldown.has(glowId)) return;
   glowCooldown.add(glowId);
 
-  // Add glow ring node
   cy.add({
     group: 'nodes',
     data: { id: glowId },
@@ -177,19 +177,13 @@ cy.on('mouseover', 'node', function(evt) {
   });
 });
 
-
-
-
-
-
 cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
-  const glowId = 'glow-' + node.id();
+  const nodeId = node.id();
+  const glowId = 'glow-' + nodeId;
 
-  // ✅ Reset tracking
-  lastHoveredNodeId = null;
-
-  if (recentlyGlowed.has(glowId)) return;
+  // ✅ Properly reset hover state
+  hoveredNodes.delete(nodeId);
 });
 
 
