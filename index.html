@@ -120,21 +120,44 @@
             });
           });
           cy.fit(undefined, 20);
+          
           // Add hover class on mouseover if node has a URL
 cy.on('mouseover', 'node', function(evt) {
   const node = evt.target;
   if (node.data('url')) {
     node.addClass('hover');
+    node.animate({
+      style: {
+        'border-width': 2,
+        'border-color': '#ffffff',
+        'border-opacity': 1,
+        'width': node.width() + 4,
+        'height': node.height() + 4
+      }
+    }, {
+      duration: 300,
+      easing: 'ease-in-out'
+    });
   }
 });
 
-// Remove hover class on mouseout
 cy.on('mouseout', 'node', function(evt) {
   const node = evt.target;
   if (node.data('url')) {
     node.removeClass('hover');
+    node.animate({
+      style: {
+        'border-width': 0,
+        'width': node.hasClass('theme') ? 36 : 20,
+        'height': node.hasClass('theme') ? 36 : 20
+      }
+    }, {
+      duration: 300,
+      easing: 'ease-in-out'
+    });
   }
 });
+
 
         });
           // 👇 Make nodes clickable if they have a URL
