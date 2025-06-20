@@ -12,11 +12,12 @@
       padding: 0;
       background: #92A0AC;
     }
+
     #cy {
-      touch-action: pan-y;
-      overscroll-behavior: contain;
       width: 100%;
       height: 100%;
+      touch-action: pinch-zoom;
+      overscroll-behavior: none;
     }
   </style>
 </head>
@@ -27,10 +28,10 @@
       .then(res => res.json())
       .then(data => {
         const cy = cytoscape({
-          wheelSensitivity: 0,
-          userZoomingEnabled: true,
           container: document.getElementById('cy'),
           elements: data.elements,
+          wheelSensitivity: 0,              // disables zoom-on-scroll
+          userZoomingEnabled: true,        // enables gesture zooming
           style: [
             {
               selector: 'node.theme',
@@ -122,6 +123,7 @@
         const activeHoverSet = new Set();
 
         cy.ready(() => {
+          // Adjust edge curves based on distance
           const curveFactor = -0.35;
           cy.edges().forEach(edge => {
             const src = edge.source().position();
@@ -137,17 +139,9 @@
 
           cy.fit(undefined, 20);
 
-          // ✅ Prevent zooming from normal scroll
-          cy.container().addEventListener('wheel', function(e) {
-            if (!e.ctrlKey && !e.metaKey) {
-              e.stopPropagation();
-            }
-          }, { passive: true });
-
-          // Edge animation
+          // Animate dashed edges
           let dashOffset = 0;
           let frameCount = 0;
-
           function animateThemeToLampEdges() {
             frameCount++;
             if (frameCount % 3 === 0) {
@@ -162,10 +156,16 @@
             }
             requestAnimationFrame(animateThemeToLampEdges);
           }
-
           requestAnimationFrame(animateThemeToLampEdges);
 
-          // Edge highlighting on theme node hover
+          // Allow scrolling through mind map container
+          cy.container().addEventListener('wheel', function(e) {
+            if (!e.ctrlKey && !e.metaKey && !e.shiftKey && e.deltaY !== 0) {
+              e.stopImmediatePropagation(); // allow page scroll to work
+            }
+          }, { passive: false });
+
+          // Highlight edges on theme hover
           cy.nodes('.theme')
             .on('mouseover', function(evt){
               const node = evt.target;
@@ -176,12 +176,11 @@
               node.connectedEdges().removeClass('highlighted-edge');
             });
 
-          // Glow animation
+          // Glow on hover
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
             const nodeId = node.id();
             const glowId = 'glow-' + nodeId;
-
             if (!node.data('url') || node.hasClass('glow-ring')) return;
             if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
 
@@ -218,7 +217,7 @@
             activeHoverSet.delete(nodeId);
           });
 
-          // Open link on tap
+          // Clickable nodes
           cy.on('tap', 'node', function(evt){
             const node = evt.target;
             const url = node.data('url');
