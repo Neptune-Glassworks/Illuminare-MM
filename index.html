@@ -201,5 +201,20 @@
         });
       });
   </script>
+  
+  <script>
+  const cyContainer = document.getElementById('cy');
+
+  document.addEventListener('wheel', function(e) {
+    const isPinchZoom = e.ctrlKey || e.metaKey;
+    const isOverCy = cyContainer.contains(e.target);
+
+    // Block scroll-zoom if over Cytoscape and not a pinch
+    if (isOverCy && !isPinchZoom) {
+      e.preventDefault(); // Stops Cytoscape zoom
+    }
+  }, { passive: false });  // passive must be false to allow preventDefault
+</script>
+
 </body>
 </html>
