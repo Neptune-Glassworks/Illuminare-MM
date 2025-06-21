@@ -139,6 +139,21 @@
         }
         requestAnimationFrame(animateThemeToLampEdges); // ← starts the loop ONCE (this is correct)
 
+const cy = cytoscape({ ... });
+
+cy.userZoomingEnabled(true);
+cy.zoomingEnabled(true);
+
+cy.container().addEventListener('wheel', function(e) {
+  const isPinchZoom = e.ctrlKey || e.metaKey;
+  if (!isPinchZoom && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    e.stopPropagation();
+  }
+}, { passive: true });
+
+// THEN call cy.ready(...)
+
+        
         // Edge curvature
         cy.ready(() => {
           const curveFactor = -0.35;
