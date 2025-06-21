@@ -15,12 +15,8 @@
       -webkit-overflow-scrolling: touch;
     }
 #cy-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* allow scrolling through */
+  position: relative;  /* ✅ allow scrolling */
+  min-height: 100vh;
 }
 
 #cy {
@@ -151,24 +147,25 @@
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-cy.userZoomingEnabled(false); // disable zoom by default
+cy.userZoomingEnabled(false); // zoom disabled by default
 
 let zoomResetTimer;
 
 cy.container().addEventListener('wheel', function (e) {
   const isPinchZoom = e.ctrlKey || e.metaKey;
-  const isVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+  const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
 
   if (isPinchZoom) {
-    cy.userZoomingEnabled(true); // temporarily enable zoom
-
+    cy.userZoomingEnabled(true); // allow pinch
     clearTimeout(zoomResetTimer);
     zoomResetTimer = setTimeout(() => {
-      cy.userZoomingEnabled(false); // disable again after 300ms
+      cy.userZoomingEnabled(false); // reset after pinch
     }, 300);
-  } else if (isVertical) {
-    e.preventDefault();               // ⛔ Block Cytoscape zoom
-    window.scrollBy(0, e.deltaY);     // ✅ Scroll the page instead
+  } else if (isVerticalScroll) {
+    // Don’t block anything. Let browser scroll normally.
+    // But stop Cytoscape from intercepting and zooming
+    e.stopPropagation();
+    // No need for preventDefault
   }
 }, { passive: false });
 
