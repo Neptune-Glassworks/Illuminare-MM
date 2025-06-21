@@ -150,6 +150,7 @@ html, body {
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
+        let zoomResetTimer;
 cy.container().addEventListener('wheel', function (e) {
   const isPinchZoom = e.ctrlKey || e.metaKey;
   const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
