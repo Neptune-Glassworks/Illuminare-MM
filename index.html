@@ -232,13 +232,13 @@ cy.container().addEventListener('wheel', function (e) {
         });
 
         // Highlight edges on theme node hover
-        cy.nodes('.theme', .lamp')
-          .on('mouseover', evt => {
-            evt.target.connectedEdges().addClass('highlighted-edge');
-          })
-          .on('mouseout', evt => {
-            evt.target.connectedEdges().removeClass('highlighted-edge');
-          });
+        cy.nodes('.theme, .lamp')
+  .on('mouseover', evt => {
+    evt.target.connectedEdges().addClass('highlighted-edge');
+  })
+  .on('mouseout', evt => {
+    evt.target.connectedEdges().removeClass('highlighted-edge');
+  });
       });
   </script>
 </body>
