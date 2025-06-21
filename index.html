@@ -150,25 +150,24 @@ html, body {
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-cy.userZoomingEnabled(false); // zoom disabled by default
-
-let zoomResetTimer;
-
 cy.container().addEventListener('wheel', function (e) {
   const isPinchZoom = e.ctrlKey || e.metaKey;
-  const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+  const isTouchpadZoomGesture = e.deltaY !== 0 && e.deltaX !== 0;
 
-  if (isPinchZoom) {
-    cy.userZoomingEnabled(true); // allow pinch
+  if (isPinchZoom && isTouchpadZoomGesture) {
+    // Prevent browser zoom
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Allow Cytoscape zoom
+    cy.userZoomingEnabled(true);
     clearTimeout(zoomResetTimer);
     zoomResetTimer = setTimeout(() => {
-      cy.userZoomingEnabled(false); // reset after pinch
+      cy.userZoomingEnabled(false);
     }, 300);
-  } else if (isVerticalScroll) {
-    // Don’t block anything. Let browser scroll normally.
-    // But stop Cytoscape from intercepting and zooming
+  } else if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+    // Vertical scroll — don't allow Cytoscape to hijack
     e.stopPropagation();
-    // No need for preventDefault
   }
 }, { passive: false });
         
