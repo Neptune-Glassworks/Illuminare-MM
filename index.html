@@ -15,13 +15,14 @@
       -webkit-overflow-scrolling: touch;
     }
     #cy-wrapper {
-      width: 100%;
-      height: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none; /* allow scrolling even when pointer is over it */
-    }
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* REMOVE THIS ↓↓↓ */
+  /* pointer-events: none; */
+}
     #cy {
       width: 100%;
       height: 100%;
@@ -149,15 +150,15 @@
         }
         requestAnimationFrame(animateThemeToLampEdges);
 
-        // Disable zoom on scroll inside container unless pinch
-cy.container().addEventListener('wheel', function (e) {
+// ✅ Block Cytoscape zoom on scroll, allow page scroll manually
+document.addEventListener('wheel', function (e) {
   const isPinchZoom = e.ctrlKey || e.metaKey;
+  const isOverCy = e.target.closest('#cy');
   const isVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-  const isOverCy = cy.container().contains(e.target);
 
   if (isOverCy && !isPinchZoom && isVertical) {
-    e.preventDefault(); // 🔒 Stop Cytoscape zoom
-    window.scrollBy(0, e.deltaY); // ✅ Still allow page scroll
+    e.preventDefault();         // ⛔ Block Cytoscape zoom
+    window.scrollBy(0, e.deltaY); // ✅ Allow page scroll manually
   }
 }, { passive: false });
 
