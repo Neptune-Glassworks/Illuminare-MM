@@ -127,7 +127,7 @@
             }
           ],
           layout: { name: 'preset' },
-          userZoomingEnabled: true,
+          userZoomingEnabled: false,
           wheelSensitivity: 0.2
         });
 
@@ -152,10 +152,14 @@
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
 cy.container().addEventListener('wheel', function (e) {
-  // If it's NOT a pinch zoom, stop Cytoscape from handling it
-  if (!e.ctrlKey && !e.metaKey) {
+  const isPinch = e.ctrlKey || e.metaKey;
+
+  if (isPinch) {
+    cy.userZoomingEnabled(true); // ✅ Allow pinch zoom
+  } else {
+    cy.userZoomingEnabled(false); // ⛔ Prevent normal zoom
     e.stopPropagation();
-    e.preventDefault(); // Optional: also stop scroll chaining
+    e.preventDefault();           // ✅ Allow normal scroll
   }
 }, { passive: false });
 
