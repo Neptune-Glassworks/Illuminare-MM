@@ -145,6 +145,18 @@
 
           cy.fit(undefined, 20);
 
+          cy.container().addEventListener('wheel', function(e) {
+  const isPinchZoom = e.ctrlKey || e.metaKey;
+
+  if (isPinchZoom) {
+    cy.userZoomingEnabled(true);
+  } else {
+    cy.userZoomingEnabled(false);
+    e.preventDefault();
+  }
+}, { passive: false });
+
+
           // 🌟 Glow on node hover
           cy.on('mouseover', 'node', function(evt) {
             const node = evt.target;
