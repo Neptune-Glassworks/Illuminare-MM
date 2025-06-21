@@ -232,7 +232,7 @@ cy.container().addEventListener('wheel', function (e) {
         });
 
         // Highlight edges on theme node hover
-        cy.nodes('.theme')
+        cy.nodes('.theme', '.lamp')
           .on('mouseover', evt => {
             evt.target.connectedEdges().addClass('highlighted-edge');
           })
