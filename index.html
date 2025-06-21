@@ -150,21 +150,18 @@ html, body {
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-cy.userZoomingEnabled(false); // zoom disabled by default
+cy.userZoomingEnabled(false); // zoom disabed by default
 
 let zoomResetTimer;
 
 cy.container().addEventListener('wheel', function (e) {
   const isPinch = e.ctrlKey || e.metaKey;
 
-  if (!isPinch && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-    // Block Cytoscape zoom on normal scroll
-    e.preventDefault();
-    e.stopPropagation();
-    // Allow page to scroll if inside iframe
-    parent.scrollBy(0, e.deltaY);
+  if (!isPinch) {
+    e.preventDefault();            // ⛔ Stop zoom
+    e.stopPropagation();           // ⛔ Stop Cytoscape handling
+    window.scrollBy(0, e.deltaY);  // ✅ Scroll page instead
   }
-  // Otherwise (e.g., pinch), allow default zoom
 }, { passive: false });
 
         // 🎯 Position edges with curvature
