@@ -151,17 +151,24 @@
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-cy.userZoomingEnabled(false); // default: no zoom
+cy.userZoomingEnabled(false); // disable zoom by default
+
+let zoomResetTimer;
 
 cy.container().addEventListener('wheel', function (e) {
   const isPinchZoom = e.ctrlKey || e.metaKey;
   const isVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
 
-  if (!isPinchZoom && isVertical) {
-    e.preventDefault();              // Stop Cytoscape zoom
-    window.scrollBy(0, e.deltaY);    // Force native page scroll
-  } else if (isPinchZoom) {
-    cy.userZoomingEnabled(true);
+  if (isPinchZoom) {
+    cy.userZoomingEnabled(true); // temporarily enable zoom
+
+    clearTimeout(zoomResetTimer);
+    zoomResetTimer = setTimeout(() => {
+      cy.userZoomingEnabled(false); // disable again after 300ms
+    }, 300);
+  } else if (isVertical) {
+    e.preventDefault();               // ⛔ Block Cytoscape zoom
+    window.scrollBy(0, e.deltaY);     // ✅ Scroll the page instead
   }
 }, { passive: false });
 
