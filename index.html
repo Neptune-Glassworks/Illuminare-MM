@@ -11,23 +11,36 @@
       margin: 0;
       padding: 0;
       background: #92A0AC;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+    #cy-wrapper {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none; /* allow scrolling even when pointer is over it */
     }
     #cy {
       width: 100%;
       height: 100%;
+      pointer-events: auto; /* allow node interactions */
     }
   </style>
 </head>
 <body>
-  <div id="cy"></div>
+  <div id="cy-wrapper">
+    <div id="cy"></div>
+  </div>
+
   <script>
-    fetch('./data/neptune_theme_network_classified.json')
+    fetch('data/neptune_theme_network_classified.json')
       .then(res => res.json())
       .then(data => {
         const cy = cytoscape({
           container: document.getElementById('cy'),
-          wheelSensitivity: 0,          elements: data.elements,
-          layout: { name: 'preset' },
+          elements: data.elements,
           style: [
             {
               selector: 'node.theme',
@@ -56,12 +69,30 @@
                 'label': ''
               }
             },
-            { selector: 'node.lamp.chandelier', style: { 'background-color': '#C5A68F', 'width': 30, 'height': 30 }},
-            { selector: 'node.lamp.pendant', style: { 'background-color': '#C1D9ED', 'width': 30, 'height': 30 }},
-            { selector: 'node.lamp.sconce', style: { 'background-color': '#FFE1CB', 'width': 30, 'height': 30 }},
-            { selector: 'node.lamp.table', style: { 'background-color': '#E8ECD7', 'width': 30, 'height': 30 }},
-            { selector: 'node.lamp.floor', style: { 'background-color': '#C5B48F', 'width': 30, 'height': 30 }},
-            { selector: 'node.lamp.outdoor', style: { 'background-color': '#312517', 'width': 30, 'height': 30 }},
+            {
+              selector: 'node.lamp.chandelier',
+              style: { 'background-color': '#C5A68F', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.pendant',
+              style: { 'background-color': '#C1D9ED', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.sconce',
+              style: { 'background-color': '#FFE1CB', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.table',
+              style: { 'background-color': '#E8ECD7', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.floor',
+              style: { 'background-color': '#C5B48F', 'width': 30, 'height': 30 }
+            },
+            {
+              selector: 'node.lamp.outdoor',
+              style: { 'background-color': '#312517', 'width': 30, 'height': 30 }
+            },
             {
               selector: 'node',
               style: {
@@ -93,33 +124,13 @@
                 'opacity': 1
               }
             }
-          ]
+          ],
+          layout: { name: 'preset' },
+          userZoomingEnabled: true,
+          wheelSensitivity: 0.2
         });
 
-        // ✅ SCROLL FIX (only pinch zoom, scroll passes through)
-        cy.userZoomingEnabled(true);
-        cy.zoomingEnabled(true);
-        
-    // Prevent scroll-to-zoom but allow vertical scroll through page
-    cy.container().addEventListener('wheel', function (e) {
-      const isPinchZoom = e.ctrlKey || e.metaKey;
-      const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-      if (!isPinchZoom && isVerticalScroll) {
-        e.preventDefault(); // block Cytoscape zoom
-        // page scroll allowed
-      }
-    }, { passive: false });
-cy.container().addEventListener('wheel', function (e) {
-          const isPinch = e.ctrlKey || e.metaKey;
-          if (!isPinch) {
-            e.stopPropagation();
-          }
-        }, { passive: true });
-
-        const glowCooldown = new Set();
-        const activeHoverSet = new Set();
-
-        // Animate dashed edges
+        // ✨ Animate dashed theme-to-lamp edges
         let dashOffset = 0;
         let frameCount = 0;
         function animateThemeToLampEdges() {
@@ -136,82 +147,90 @@ cy.container().addEventListener('wheel', function (e) {
           }
           requestAnimationFrame(animateThemeToLampEdges);
         }
+        requestAnimationFrame(animateThemeToLampEdges);
 
+        // 🔍 Disable zoom-on-scroll but allow pinch-to-zoom
+        cy.container().addEventListener('wheel', function (e) {
+          const isPinchZoom = e.ctrlKey || e.metaKey;
+          const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+          if (!isPinchZoom && isVerticalScroll) {
+            // Let event bubble so page scroll works
+            return;
+          }
+        }, { passive: true });
 
-        cy.ready(() => {
-          // Curve edges
-          const curveFactor = -0.35;
-          cy.edges().forEach(edge => {
-            const src = edge.source().position();
-            const tgt = edge.target().position();
-            const dx = tgt.x - src.x;
-            const dy = tgt.y - src.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            edge.style({
-              'control-point-distances': [curveFactor * dist],
-              'control-point-weights': [0.5]
-            });
+        // 🎯 Position edges with curvature
+        const curveFactor = -0.35;
+        cy.edges().forEach(edge => {
+          const src = edge.source().position();
+          const tgt = edge.target().position();
+          const dx = tgt.x - src.x;
+          const dy = tgt.y - src.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          edge.style({
+            'control-point-distances': [curveFactor * dist],
+            'control-point-weights': [0.5]
+          });
+        });
+
+        cy.fit(undefined, 20);
+
+        // 💡 Glow and highlight
+        const glowCooldown = new Set();
+        const activeHoverSet = new Set();
+
+        cy.on('mouseover', 'node', function(evt) {
+          const node = evt.target;
+          const nodeId = node.id();
+          const glowId = 'glow-' + nodeId;
+          if (!node.data('url') || node.hasClass('glow-ring')) return;
+          if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
+
+          activeHoverSet.add(nodeId);
+          glowCooldown.add(glowId);
+
+          cy.add({
+            group: 'nodes',
+            data: { id: glowId },
+            position: node.position(),
+            classes: 'glow-ring'
           });
 
-          cy.fit(undefined, 20);
-
-          // Hover glow effect
-          cy.on('mouseover', 'node', function(evt) {
-            const node = evt.target;
-            const nodeId = node.id();
-            const glowId = 'glow-' + nodeId;
-            if (!node.data('url') || node.hasClass('glow-ring')) return;
-            if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
-            activeHoverSet.add(nodeId);
-            glowCooldown.add(glowId);
-
-            cy.add({
-              group: 'nodes',
-              data: { id: glowId },
-              position: node.position(),
-              classes: 'glow-ring'
-            });
-
-            const glow = cy.getElementById(glowId);
-            glow.animate({
-              style: {
-                'width': node.width() * 5,
-                'height': node.height() * 5,
-                'opacity': 0
-              }
-            }, {
-              duration: 600,
-              easing: 'ease-out',
-              complete: () => {
-                glow.remove();
-                glowCooldown.delete(glowId);
-              }
-            });
-          });
-
-          cy.on('mouseout', 'node', function(evt) {
-            const nodeId = evt.target.id();
-            activeHoverSet.delete(nodeId);
-          });
-
-          cy.on('tap', 'node', function(evt) {
-            const url = evt.target.data('url');
-            if (url) {
-              window.open(url, '_blank');
+          const glow = cy.getElementById(glowId);
+          glow.animate({
+            style: {
+              'width': node.width() * 5,
+              'height': node.height() * 5,
+              'opacity': 0
+            }
+          }, {
+            duration: 600,
+            easing: 'ease-out',
+            complete: () => {
+              glow.remove();
+              glowCooldown.delete(glowId);
             }
           });
-
-          // Highlight edges on theme hover
-          cy.nodes('.theme')
-            .on('mouseover', function(evt) {
-              evt.target.connectedEdges().addClass('highlighted-edge');
-            })
-            .on('mouseout', function(evt) {
-              evt.target.connectedEdges().removeClass('highlighted-edge');
-            });
         });
+
+        cy.on('mouseout', 'node', evt => {
+          activeHoverSet.delete(evt.target.id());
+        });
+
+        cy.on('tap', 'node', evt => {
+          const url = evt.target.data('url');
+          if (url) window.open(url, '_blank');
+        });
+
+        // Highlight edges on theme node hover
+        cy.nodes('.theme')
+          .on('mouseover', evt => {
+            evt.target.connectedEdges().addClass('highlighted-edge');
+          })
+          .on('mouseout', evt => {
+            evt.target.connectedEdges().removeClass('highlighted-edge');
+          });
       });
   </script>
 </body>
 </html>
-
