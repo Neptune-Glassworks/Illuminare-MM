@@ -149,15 +149,17 @@
         }
         requestAnimationFrame(animateThemeToLampEdges);
 
-        // 🔍 Disable zoom-on-scroll but allow pinch-to-zoom
-        cy.container().addEventListener('wheel', function (e) {
-          const isPinchZoom = e.ctrlKey || e.metaKey;
-          const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-          if (!isPinchZoom && isVerticalScroll) {
-            // Let event bubble so page scroll works
-            return;
-          }
-        }, { passive: true });
+        // Disable zoom on scroll inside container unless pinch
+cy.container().addEventListener('wheel', function (e) {
+  const isPinchZoom = e.ctrlKey || e.metaKey;
+  const isVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+  const isOverCy = cy.container().contains(e.target);
+
+  if (isOverCy && !isPinchZoom && isVertical) {
+    e.preventDefault(); // 🔒 Stop Cytoscape zoom
+    window.scrollBy(0, e.deltaY); // ✅ Still allow page scroll
+  }
+}, { passive: false });
 
         // 🎯 Position edges with curvature
         const curveFactor = -0.35;
