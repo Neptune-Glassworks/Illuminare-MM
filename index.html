@@ -151,14 +151,11 @@
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-document.addEventListener('wheel', function (e) {
-  const isPinchZoom = e.ctrlKey || e.metaKey;
-  const isOverCy = document.getElementById('cy').contains(e.target);
-  const isVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-
-  if (isOverCy && !isPinchZoom && isVertical) {
-    e.preventDefault();               // ⛔ Block Cytoscape zoom
-    window.scrollBy(0, e.deltaY);     // ✅ Allow normal page scroll
+cy.container().addEventListener('wheel', function (e) {
+  // If it's NOT a pinch zoom, stop Cytoscape from handling it
+  if (!e.ctrlKey && !e.metaKey) {
+    e.stopPropagation();
+    e.preventDefault(); // Optional: also stop scroll chaining
   }
 }, { passive: false });
 
