@@ -21,7 +21,7 @@
 <body>
   <div id="cy"></div>
   <script>
-    fetch('neptune_theme_network_classified.json')
+    fetch('./data/neptune_theme_network_classified.json')
       .then(res => res.json())
       .then(data => {
         const cy = cytoscape({
