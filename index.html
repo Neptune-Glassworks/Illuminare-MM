@@ -154,13 +154,11 @@
 cy.container().addEventListener('wheel', function (e) {
   const isPinch = e.ctrlKey || e.metaKey;
 
-  if (isPinch) {
-    cy.userZoomingEnabled(true); // ✅ Allow pinch zoom
-  } else {
-    cy.userZoomingEnabled(false); // ⛔ Prevent normal zoom
-    e.stopPropagation();
-    e.preventDefault();           // ✅ Allow normal scroll
-  }
+  if (!isPinch) {
+  e.preventDefault();            // ⛔ Stop zoom
+  e.stopPropagation();           // ⛔ Stop Cytoscape handling
+  window.scrollBy(0, e.deltaY);  // ✅ Scroll page instead
+}
 }, { passive: false });
 
         // 🎯 Position edges with curvature
