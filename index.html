@@ -150,20 +150,27 @@ html, body {
         requestAnimationFrame(animateThemeToLampEdges);
 
 // ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-cy.userZoomingEnabled(false); // zoom disabed by default
-
 let zoomResetTimer;
 
 cy.container().addEventListener('wheel', function (e) {
-  const isPinch = e.ctrlKey || e.metaKey;
+  const isPinchZoom = e.ctrlKey || e.metaKey;
+  const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
 
-  if (!isPinch) {
-    e.preventDefault();            // ⛔ Stop zoom
-    e.stopPropagation();           // ⛔ Stop Cytoscape handling
-    window.scrollBy(0, e.deltaY);  // ✅ Scroll page instead
+  if (isPinchZoom) {
+    cy.userZoomingEnabled(true); // allow pinch
+    clearTimeout(zoomResetTimer);
+    zoomResetTimer = setTimeout(() => {
+      cy.userZoomingEnabled(false); // reset after pinch
+    }, 300);
+  } else if (isVerticalScroll) {
+    // Don't block anything. Let browser scroll normally.
+    // But stop Cytoscape from intercepting and zooming
+    e.stopPropagation();
+    e.preventDefault();
   }
 }, { passive: false });
 
+        
         // 🎯 Position edges with curvature
         const curveFactor = -0.35;
         cy.edges().forEach(edge => {
