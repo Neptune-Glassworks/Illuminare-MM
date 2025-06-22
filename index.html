@@ -136,7 +136,7 @@
   <div id="cy-wrapper">
   <div id="cy"></div>
 
-  <!-- CONTROLS -->
+  <!-- Map CONTROLS -->
   <div id="cy-controls">
     <button data-action="zoom-in">＋</button>
     <button data-action="zoom-out">－</button>
@@ -144,20 +144,42 @@
     <button data-action="info">i</button>
   </div>
 
-    
-    <div id="mindmap-legend">
-      <strong>Legend</strong>
-      <span class="legend-dot chandelier"></span>Chandelier<br>
-      <span class="legend-dot pendant"></span>Pendant<br>
-      <span class="legend-dot sconce"></span>Sconce<br>
-      <span class="legend-dot table"></span>Table Lamp<br>
-      <span class="legend-dot floor"></span>Floor Lamp<br>
-      <span class="legend-dot outdoor"></span>Outdoor<br>
-      <span class="legend-dot theme"></span>Theme Node
-    </div>
+  <!-- ─── Legend HTML ─── -->
+<div id="mindmap-legend">
+  <strong>Legend</strong>
+  <div class="legend-item">
+    <span class="legend-dot chandelier"></span>
+    <span>Chandelier</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot pendant"></span>
+    <span>Pendant</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot sconce"></span>
+    <span>Sconce</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot table"></span>
+    <span>Table Lamp</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot floor"></span>
+    <span>Floor Lamp</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot outdoor"></span>
+    <span>Outdoor</span>
+  </div>
+  <div class="legend-item">
+    <span class="legend-dot theme"></span>
+    <span>Theme Node</span>
+  </div>
+</div>   
+
   </div>
 
- 
+
     
 
   <!-- ─── JavaScript: Cytoscape init + interactions + legend positioning ─── -->
