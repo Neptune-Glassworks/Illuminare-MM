@@ -1,246 +1,4 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Illuminare Mind Map</title>
-  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
-  <!-- 1) Load the font first -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  />
-      
-  <style>
-    /* 1) Base resets & default gradient */
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: auto;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      background: linear-gradient(to bottom, #2A2A2A, #1F1F1F);
-    }
-
-    /* 2) Blend‐mode overlay */
-    @supports (background-blend-mode: overlay) {
-      html, body {
-        background-image:
-          url('paper_texture.png'),
-          linear-gradient(to bottom, #2A2A2A, #1F1F1F);
-        background-repeat: repeat, no-repeat;
-        background-size: auto, cover;
-        background-blend-mode: overlay;
-      }
-    }
-
-    #cy-wrapper {
-      width: 100%;
-      height: auto;
-      position: relative;
-      padding-bottom: 40vh;
-    }
-
-    #cy {
-      width: 100%;
-      height: 100vh;
-      pointer-events: auto;
-    }
-  </style>
-</head>
-<body>
-  <div id="cy-wrapper">
-    <div id="cy"></div>
-  </div>
-
-  <script>
-    fetch('data/neptune_theme_network_classified.json')
-      .then(res => res.json())
-      .then(data => {
-
-        
-const cy = cytoscape({
-  container: document.getElementById('cy'),
-  elements: data.elements,
-
-  style: [
-
-    // 1) Theme nodes (bigger, dark olive, soft glow)
-    {
-      selector: 'node.theme',
-      style: {
-        'background-color': '#1B2A22',
-        'label': 'data(name)',
-        'font-family': 'DM Sans, sans-serif',
-        'font-size': '32px',
-        'text-valign': 'center',
-        'color': '#FFF',
-        'text-outline-color': '#1F1F1F',
-        'text-outline-width': '0.5px',
-        'width': 46,
-        'height': 46,
-      }
-    },
-
-    // 2) Glow rings (unchanged)
-    {
-      selector: '.glow-ring',
-      style: {
-        'background-color': '#FFD700',
-        'opacity': 0.25,
-        'width': 20,
-        'height': 20,
-        'z-index': 0,
-        'shape': 'ellipse',
-        'events': 'no',
-        'label': ''
-      }
-    },
-
-    // 3) Lamp fixtures with new warm/cool palette
-    {
-      selector: 'node.lamp.chandelier',
-      style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 }
-    },
-    {
-      selector: 'node.lamp.pendant',
-      style: { 'background-color': '#7E9BAE', 'width': 25, 'height': 25 }
-    },
-    {
-      selector: 'node.lamp.sconce',
-      style: { 'background-color': '#D9BCA3', 'width': 25, 'height': 25 }
-    },
-    {
-      selector: 'node.lamp.table',
-      style: { 'background-color': '#E6C4C9', 'width': 25, 'height': 25 }
-    },
-    {
-      selector: 'node.lamp.floor',
-      style: { 'background-color': '#A5A77B', 'width': 25, 'height': 25 }
-    },
-    {
-      selector: 'node.lamp.outdoor',
-      style: { 'background-color': '#B7D1C5', 'width': 25, 'height': 25 }
-    },
-
-    // 4) Default nodes (labels, text outlines)
-    {
-      selector: 'node',
-      style: {
-        'label': 'data(name)',
-        'font-family': 'DM Sans, sans-serif',
-        'font-size': '20px',
-        'text-valign': 'center',
-        'color': '#FFF',
-        'text-outline-color': '#1F1F1F',
-        'text-outline-width': '0.5px'
-
-      }
-    },
-
-    // 5) Default edges (dashed, light opacity)
-    {
-      selector: 'edge',
-      style: {
-        'width': 1.5,
-        'line-color': '#E1E7ED',
-        'line-style': 'dashed',
-        'opacity': 0.5,
-        'line-dash-pattern': [6, 4],
-        'curve-style': 'unbundled-bezier',
-        'edge-distances': 'node-position',
-        'control-point-distances': 0,
-        'control-point-weights': 0.5
-      }
-    },
-
-    // 6) Highlighted edges (on hover)
-    {
-      selector: 'edge.highlighted-edge',
-      style: {
-        'opacity': 1
-      }
-    }
-
-  ],  // end of style array
-
-  layout: { name: 'preset' },
-
-  // KEEP THESE EXACTLY AS IS:
-  userZoomingEnabled: false,
-  wheelSensitivity: 0.2
-});
-
-        // ✨ Animate dashed theme-to-lamp edges
-        let dashOffset = 0;
-        let frameCount = 0;
-        function animateThemeToLampEdges() {
-          frameCount++;
-          if (frameCount % 3 === 0) {
-            dashOffset = (dashOffset - 1 + 10) % 10;
-            cy.edges().forEach(edge => {
-              const source = edge.source();
-              const target = edge.target();
-              if (source.hasClass('theme') && target.hasClass('lamp')) {
-                edge.style('line-dash-offset', dashOffset);
-              }
-            });
-          }
-          requestAnimationFrame(animateThemeToLampEdges);
-        }
-        requestAnimationFrame(animateThemeToLampEdges);
-
-// ✅ Block Cytoscape zoom on scroll, allow page scroll manually
-        let zoomResetTimer;
-cy.container().addEventListener('wheel', function (e) {
-  const isPinchZoom = e.ctrlKey || e.metaKey;
-  const isVerticalScroll = Math.abs(e.deltaY) > Math.abs(e.deltaX);
-
-  if (isPinchZoom) {
-    e.preventDefault(); // ✅ this one line helps Chrome/Firefox stop hijacking
-    cy.userZoomingEnabled(true);
-    clearTimeout(zoomResetTimer);
-    zoomResetTimer = setTimeout(() => {
-      cy.userZoomingEnabled(false);
-    }, 300);
-  } else if (isVerticalScroll) {
-    e.stopPropagation();
-  }
-}, { passive: false });
-        
-        // 🎯 Position edges with curvature
-        const curveFactor = -0.35;
-        cy.edges().forEach(edge => {
-          const src = edge.source().position();
-          const tgt = edge.target().position();
-          const dx = tgt.x - src.x;
-          const dy = tgt.y - src.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          edge.style({
-            'control-point-distances': [curveFactor * dist],
-            'control-point-weights': [0.5]
-          });
-        });
-
-        cy.center(); // prevents zooming out so far that it's invisible
-        cy.zoom(.65); // or whatever feels balanced
-
-// New Container ->
-        <style>
-  .legend {
-    position: absolute;
-    background: rgba(255,255,255,0.9);
-    padding: 8px;
-    border-radius: 4px;
-    font: 14px DM Sans, sans-serif;
-    right: 20px;  /* initial offsets, will be overridden by JS */
-    bottom: 20px;
-  }
-</style>
-<body>
-  <div id="cy-wrapper">
-    <div id="cy"></div>
-    <div class="legend">
-      <strong>Legend<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -255,9 +13,7 @@ cy.container().addEventListener('wheel', function (e) {
   />
 
   <style>
-    /* —————————————————————————— *
-       Global & Background
-    * —————————————————————————— */
+    /* — Global & Background — */
     html, body {
       margin: 0;
       padding: 0;
@@ -277,23 +33,19 @@ cy.container().addEventListener('wheel', function (e) {
       }
     }
 
-    /* —————————————————————————— *
-       Cytoscape Wrapper
-    * —————————————————————————— */
+    /* — Cytoscape wrapper & viewport — */
     #cy-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 40vh; /* extra vertical scroll room */
+      padding-bottom: 40vh; /* extra scroll room */
     }
     #cy {
       width: 100%;
-      height: 100vh; /* fill viewport */
+      height: 100vh;
       pointer-events: auto;
     }
 
-    /* —————————————————————————— *
-       Legend Styling
-    * —————————————————————————— */
+    /* — Legend styling — */
     .legend {
       position: absolute;
       background: rgba(255,255,255,0.9);
@@ -302,9 +54,9 @@ cy.container().addEventListener('wheel', function (e) {
       font: 14px "DM Sans", sans-serif;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       line-height: 1.4;
-      pointer-events: none; /* clicks pass through */
+      pointer-events: none;
     }
-    .legend strong { display: block; margin-bottom: 4px; }
+    .legend strong { display: block; margin-bottom: 6px; }
     .legend .swatch {
       display: inline-block;
       width: 0.8em; height: 0.8em;
@@ -319,7 +71,7 @@ cy.container().addEventListener('wheel', function (e) {
   <div id="cy-wrapper">
     <div id="cy"></div>
 
-    <!-- Legend markup -->
+    <!-- Legend with all fixture types -->
     <div class="legend">
       <strong>Legend</strong>
       <div><span class="swatch" style="background:#F5F1E8"></span>Chandelier</div>
@@ -340,7 +92,7 @@ cy.container().addEventListener('wheel', function (e) {
         container: document.getElementById('cy'),
         elements: data.elements,
         style: [
-          // theme nodes
+          // Theme nodes
           {
             selector: 'node.theme',
             style: {
@@ -356,7 +108,7 @@ cy.container().addEventListener('wheel', function (e) {
               'height': 46
             }
           },
-          // glow rings
+          // Glow rings
           {
             selector: '.glow-ring',
             style: {
@@ -370,26 +122,14 @@ cy.container().addEventListener('wheel', function (e) {
               'label': ''
             }
           },
-          // fixture palettes
-          {
-            selector: 'node.lamp.chandelier', style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 }
-          },
-          {
-            selector: 'node.lamp.pendant', style: { 'background-color': '#7E9BAE', 'width': 25, 'height': 25 }
-          },
-          {
-            selector: 'node.lamp.sconce', style: { 'background-color': '#D9BCA3', 'width': 25, 'height': 25 }
-          },
-          {
-            selector: 'node.lamp.table', style: { 'background-color': '#E6C4C9', 'width': 25, 'height': 25 }
-          },
-          {
-            selector: 'node.lamp.floor', style: { 'background-color': '#A5A77B', 'width': 25, 'height': 25 }
-          },
-          {
-            selector: 'node.lamp.outdoor', style: { 'background-color': '#B7D1C5', 'width': 25, 'height': 25 }
-          },
-          // default node label
+          // Fixture palettes
+          { selector: 'node.lamp.chandelier', style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 } },
+          { selector: 'node.lamp.pendant',    style: { 'background-color': '#7E9BAE', 'width': 25, 'height': 25 } },
+          { selector: 'node.lamp.sconce',     style: { 'background-color': '#D9BCA3', 'width': 25, 'height': 25 } },
+          { selector: 'node.lamp.table',      style: { 'background-color': '#E6C4C9', 'width': 25, 'height': 25 } },
+          { selector: 'node.lamp.floor',      style: { 'background-color': '#A5A77B', 'width': 25, 'height': 25 } },
+          { selector: 'node.lamp.outdoor',    style: { 'background-color': '#B7D1C5', 'width': 25, 'height': 25 } },
+          // Default labels
           {
             selector: 'node',
             style: {
@@ -402,7 +142,7 @@ cy.container().addEventListener('wheel', function (e) {
               'text-outline-width': 0.5
             }
           },
-          // edges
+          // Edges
           {
             selector: 'edge',
             style: {
@@ -427,7 +167,7 @@ cy.container().addEventListener('wheel', function (e) {
         wheelSensitivity: 0.2
       });
 
-      // animated dashes
+      // Animate dashed offsets
       let dashOffset = 0, frame = 0;
       (function animate(){
         frame++;
@@ -439,7 +179,7 @@ cy.container().addEventListener('wheel', function (e) {
         requestAnimationFrame(animate);
       })();
 
-      // curvature
+      // Curved edges
       const factor = -0.35;
       cy.edges().forEach(edge => {
         const s = edge.source().position();
@@ -452,29 +192,28 @@ cy.container().addEventListener('wheel', function (e) {
         });
       });
 
-      // center & zoom
+      // Center & zoom
       cy.center();
       cy.zoom(0.65);
 
-      // hover glow & highlight
+      // Hover glow
       const glowSet = new Set(), hoverSet = new Set();
-      cy.on('mouseover', 'node', evt => {
-        const n = evt.target, id = n.id(), glowId = `glow-${id}`;
-        if(!n.data('url') || n.hasClass('glow-ring') || hoverSet.has(id) || glowSet.has(glowId)) return;
-        hoverSet.add(id); glowSet.add(glowId);
-        cy.add({ group:'nodes', data:{id:glowId}, position:n.position(), classes:'glow-ring' })
-          .animate({ style:{ width:n.width()*5, height:n.height()*5, opacity:0 }}, {
-            duration:600, easing:'ease-out',
-            complete: ()=>{ cy.getElementById(glowId).remove(); glowSet.delete(glowId); }
+      cy.on('mouseover','node',evt=>{
+        const n=evt.target, id=n.id(), gid=`glow-${id}`;
+        if(!n.data('url')||n.hasClass('glow-ring')||hoverSet.has(id)||glowSet.has(gid)) return;
+        hoverSet.add(id); glowSet.add(gid);
+        cy.add({ group:'nodes', data:{id:gid}, position:n.position(), classes:'glow-ring' })
+          .animate({ style:{ width:n.width()*5, height:n.height()*5, opacity:0 }},{ duration:600, easing:'ease-out',
+            complete: ()=>{ cy.getElementById(gid).remove(); glowSet.delete(gid); }
           });
       });
-      cy.on('mouseout','node', evt=> hoverSet.delete(evt.target.id()));
-      cy.on('tap','node', evt=>{ const u=evt.target.data('url'); if(u) window.open(u); });
+      cy.on('mouseout','node',evt=> hoverSet.delete(evt.target.id()));
+      cy.on('tap','node',evt=>{ const u=evt.target.data('url'); if(u) window.open(u); });
       cy.nodes('.theme, .lamp')
         .on('mouseover', e => e.target.connectedEdges().addClass('highlighted-edge'))
         .on('mouseout',  e => e.target.connectedEdges().removeClass('highlighted-edge'));
 
-      // legend positioning
+      // Legend positioning
       function positionLegend(){
         const wrap = document.getElementById('cy-wrapper');
         if(!wrap) return;
@@ -486,88 +225,6 @@ cy.container().addEventListener('wheel', function (e) {
       window.addEventListener('resize', positionLegend);
       positionLegend();
     });
-  </script>
-</body>
-</html></strong><br>
-      ● Chandelier<br>
-      ● Pendant<br>
-      <!-- etc… -->
-    </div>
-  </div>
-  <script>
-    // … your cytoscape init …
-
-    function positionLegend() {
-      const wrapper = document.getElementById('cy-wrapper');
-      if (!wrapper) return;
-      const rect   = wrapper.getBoundingClientRect();
-      const legend = document.querySelector('.legend');
-      legend.style.top  = `${rect.bottom - legend.offsetHeight - 10}px`;
-      legend.style.left = `${rect.right  - legend.offsetWidth  - 10}px`;
-    }
-
-    window.addEventListener('resize', positionLegend);
-    positionLegend();
-  </script>
-</body>
-// <- End of new container
-  
-        // 💡 Glow and highlight
-        const glowCooldown = new Set();
-        const activeHoverSet = new Set();
-
-        cy.on('mouseover', 'node', function(evt) {
-          const node = evt.target;
-          const nodeId = node.id();
-          const glowId = 'glow-' + nodeId;
-          if (!node.data('url') || node.hasClass('glow-ring')) return;
-          if (activeHoverSet.has(nodeId) || glowCooldown.has(glowId)) return;
-
-          activeHoverSet.add(nodeId);
-          glowCooldown.add(glowId);
-
-          cy.add({
-            group: 'nodes',
-            data: { id: glowId },
-            position: node.position(),
-            classes: 'glow-ring'
-          });
-
-          const glow = cy.getElementById(glowId);
-          glow.animate({
-            style: {
-              'width': node.width() * 5,
-              'height': node.height() * 5,
-              'opacity': 0
-            }
-          }, {
-            duration: 600,
-            easing: 'ease-out',
-            complete: () => {
-              glow.remove();
-              glowCooldown.delete(glowId);
-            }
-          });
-        });
-
-        cy.on('mouseout', 'node', evt => {
-          activeHoverSet.delete(evt.target.id());
-        });
-
-        cy.on('tap', 'node', evt => {
-          const url = evt.target.data('url');
-          if (url) window.open(url, '_blank');
-        });
-
-        // Highlight edges on theme node hover
-        cy.nodes('.theme, .lamp')
-  .on('mouseover', evt => {
-    evt.target.connectedEdges().addClass('highlighted-edge');
-  })
-  .on('mouseout', evt => {
-    evt.target.connectedEdges().removeClass('highlighted-edge');
-  });
-      });
   </script>
 </body>
 </html>
