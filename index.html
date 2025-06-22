@@ -39,7 +39,9 @@
     #cy-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 40vh; /* allow vertical scroll below graph */
+      /* padding-bottom: 40vh; /* allow vertical scroll below graph */
+      height: 800px;        /* ← add this */
+      overflow: hidden;     /* optional: prevent scrollbars inside */
     }
     #cy {
       width: 100%;
@@ -279,18 +281,18 @@
           .on('mouseout',  evt => evt.target.connectedEdges().removeClass('highlighted-edge'));
 
         // --- Legend positioning ---
-        function positionLegend(){
-          const wrap   = document.getElementById('cy-wrapper');
-          const legend = document.getElementById('mindmap-legend');
-          if(!wrap || !legend) return;
-          const rect  = wrap.getBoundingClientRect();
-          const scroll= window.pageYOffset || document.documentElement.scrollTop;
-          legend.style.top  = (rect.bottom + scroll - legend.offsetHeight - 10) + 'px';
-          legend.style.left = (rect.right - legend.offsetWidth - 40) + 'px';
-        }
-        window.addEventListener('load',   positionLegend);
-        window.addEventListener('resize', positionLegend);
-        window.addEventListener('scroll', positionLegend);
+        //function positionLegend(){
+        //  const wrap   = document.getElementById('cy-wrapper');
+        //  const legend = document.getElementById('mindmap-legend');
+        //  if(!wrap || !legend) return;
+        //  const rect  = wrap.getBoundingClientRect();
+        //  const scroll= window.pageYOffset || document.documentElement.scrollTop;
+        //  legend.style.top  = (rect.bottom + scroll - legend.offsetHeight - 10) + 'px';
+        //  legend.style.left = (rect.right - legend.offsetWidth - 40) + 'px';
+        //}
+        //window.addEventListener('load',   positionLegend);
+        //window.addEventListener('resize', positionLegend);
+        //window.addEventListener('scroll', positionLegend);
       });
   </script>
 </body>
