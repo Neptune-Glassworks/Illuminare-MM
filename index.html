@@ -301,6 +301,28 @@
           .on('mouseover', evt => evt.target.connectedEdges().addClass('highlighted-edge'))
           .on('mouseout',  evt => evt.target.connectedEdges().removeClass('highlighted-edge'));
 
+
+        // ─── Button interactions ───
+document.getElementById('cy-controls').addEventListener('click', e => {
+  const action = e.target.getAttribute('data-action');
+  if (!action) return;
+
+  switch (action) {
+    case 'zoom-in':
+      cy.zoom(cy.zoom() + 0.1);
+      break;
+    case 'zoom-out':
+      cy.zoom(cy.zoom() - 0.1);
+      break;
+    case 'reset':
+      cy.center();
+      cy.zoom(0.65);
+      break;
+    case 'info':
+      alert('Hover nodes to see connections; click to open detail pages.');
+      break;
+  }
+});
         // --- Legend positioning ---
         //function positionLegend(){
         //  const wrap   = document.getElementById('cy-wrapper');
