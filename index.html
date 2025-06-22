@@ -14,12 +14,14 @@
     
 html, body {
   /* layer 1: paper texture on top, layer 2: gradient underneath */
-  background: 
-    url('paper_texture.png') repeat, 
+  html, body {
+  background-image:
+    url('paper_texture.png'),
     linear-gradient(to bottom, #2A2A2A, #1F1F1F);
-
-  /* make sure it fills */
+  background-repeat: repeat, no-repeat;
   background-size: auto, cover;
+  background-blend-mode: overlay;   /* or try soft-light */
+}
   
   /* the rest of your properties… */
   margin: 0;
