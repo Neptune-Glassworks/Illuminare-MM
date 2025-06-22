@@ -13,17 +13,18 @@
   <style>
     
 html, body {
+  background-color: #2A2A2A; /* a solid fallback */
+  background-image:
+    linear-gradient(to bottom, #2A2A2A, #1F1F1F),
+    url('paper_texture.png');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, auto;
+  
+  background-blend-mode: multiply; 
+  /* or try overlay, darken, etc. to taste */
+
   margin: 0;
   padding: 0;
-
-  /* old background, in case you need it later:
-  background: #92A0AC;
-  */
-
-  /* new gradient + texture */
-  background: linear-gradient(to bottom, #2A2A2A, #1F1F1F);
-  background-image: url('paper_texture.png');
-  background-repeat: repeat;
   height: auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
