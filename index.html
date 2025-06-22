@@ -13,13 +13,17 @@
   <style>
     
 html, body {
-  /* 1) gradient underneath, 2) texture on top */
-  background:
-    url('paper_texture.png') repeat,
+  /* blending layers */
+  html, body {
+  background-image:
+    url('paper_texture.png'),
     linear-gradient(to bottom, #2A2A2A, #1F1F1F);
+  background-repeat: repeat, no-repeat;
   background-size: auto, cover;
+  background-blend-mode: soft-light;   /* or try overlay */
+}
   
-  /* rest of your rules… */
+  /* the rest of your properties… */
   margin: 0;
   padding: 0;
   height: auto;
