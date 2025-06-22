@@ -47,97 +47,121 @@ html, body {
     fetch('data/neptune_theme_network_classified.json')
       .then(res => res.json())
       .then(data => {
-        const cy = cytoscape({
-          container: document.getElementById('cy'),
-          elements: data.elements,
-          style: [
-            {
-              selector: 'node.theme',
-              style: {
-                'background-color': '#525B44',
-                'label': 'data(name)',
-                'font-size': 32,
-                'text-valign': 'center',
-                'color': '#FFF',
-                'text-outline-color': '#333',
-                'text-outline-width': 1,
-                'width': 46,
-                'height': 46
-              }
-            },
-            {
-              selector: '.glow-ring',
-              style: {
-                'background-color': '#FFD700',
-                'opacity': 0.25,
-                'width': 20,
-                'height': 20,
-                'z-index': 0,
-                'shape': 'ellipse',
-                'events': 'no',
-                'label': ''
-              }
-            },
-            {
-              selector: 'node.lamp.chandelier',
-              style: { 'background-color': '#C5A68F', 'width': 25, 'height': 25 }
-            },
-            {
-              selector: 'node.lamp.pendant',
-              style: { 'background-color': '#C1D9ED', 'width': 25, 'height': 25 }
-            },
-            {
-              selector: 'node.lamp.sconce',
-              style: { 'background-color': '#FFE1CB', 'width': 25, 'height': 25 }
-            },
-            {
-              selector: 'node.lamp.table',
-              style: { 'background-color': '#E8ECD7', 'width': 25, 'height': 25 }
-            },
-            {
-              selector: 'node.lamp.floor',
-              style: { 'background-color': '#C5B48F', 'width': 25, 'height': 25 }
-            },
-            {
-              selector: 'node.lamp.outdoor',
-              style: { 'background-color': '#312517', 'width': 25, 'height': 25 }
-            },
-            {
-              selector: 'node',
-              style: {
-                'label': 'data(name)',
-                'font-size': 18,
-                'text-valign': 'center',
-                'color': '#FFF',
-                'text-outline-color': '#333',
-                'text-outline-width': 1
-              }
-            },
-            {
-              selector: 'edge',
-              style: {
-                'width': 1.5,
-                'line-color': '#E1E7ED',
-                'line-style': 'dashed',
-                'opacity': 0.5,
-                'line-dash-pattern': [6, 4],
-                'curve-style': 'unbundled-bezier',
-                'edge-distances': 'node-position',
-                'control-point-distances': 0,
-                'control-point-weights': 0.5
-              }
-            },
-            {
-              selector: 'edge.highlighted-edge',
-              style: {
-                'opacity': 1
-              }
-            }
-          ],
-          layout: { name: 'preset' },
-          userZoomingEnabled: false,
-          wheelSensitivity: 0.2
-        });
+      const cy = cytoscape({
+  container: document.getElementById('cy'),
+  elements: data.elements,
+
+  style: [
+
+    // — Theme nodes —  
+    {
+      selector: 'node.theme',
+      style: {
+        'background-color': '#1B2A22',
+        'label': 'data(name)',
+        'font-family': 'DM Sans, sans-serif',
+        'font-size': '32px',
+        'text-valign': 'center',
+        'color': '#FFF',
+        'text-outline-color': '#1F1F1F',
+        'text-outline-width': '0.5px',
+        'width': 46,
+        'height': 46,
+        /* soft glow via Cytoscape shadows */
+        'shadow-blur': 15,
+        'shadow-color': '#97C594',
+        'shadow-opacity': 0.4,
+        'shadow-offset-x': 0,
+        'shadow-offset-y': 0
+      }
+    },
+
+    // — Glow rings (unchanged) —  
+    {
+      selector: '.glow-ring',
+      style: {
+        'background-color': '#FFD700',
+        'opacity': 0.25,
+        'width': 20,
+        'height': 20,
+        'z-index': 0,
+        'shape': 'ellipse',
+        'events': 'no',
+        'label': ''
+      }
+    },
+
+    // — Lamp nodes with new palette —  
+    {
+      selector: 'node.lamp.chandelier',
+      style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 }
+    },
+    {
+      selector: 'node.lamp.pendant',
+      style: { 'background-color': '#7E9BAE', 'width': 25, 'height': 25 }
+    },
+    {
+      selector: 'node.lamp.sconce',
+      style: { 'background-color': '#D9BCA3', 'width': 25, 'height': 25 }
+    },
+    {
+      selector: 'node.lamp.table',
+      style: { 'background-color': '#E6C4C9', 'width': 25, 'height': 25 }
+    },
+    {
+      selector: 'node.lamp.floor',
+      style: { 'background-color': '#A5A77B', 'width': 25, 'height': 25 }
+    },
+    {
+      selector: 'node.lamp.outdoor',
+      style: { 'background-color': '#B7D1C5', 'width': 25, 'height': 25 }
+    },
+
+    // — Default node labels —  
+    {
+      selector: 'node',
+      style: {
+        'label': 'data(name)',
+        'font-family': 'DM Sans, sans-serif',
+        'font-size': '20px',
+        'text-valign': 'center',
+        'color': '#FFF',
+        'text-outline-color': '#1F1F1F',
+        'text-outline-width': '0.5px'
+      }
+    },
+
+    // — Default edges —  
+    {
+      selector: 'edge',
+      style: {
+        'width': 1.5,
+        'line-color': '#E1E7ED',
+        'line-style': 'dashed',
+        'opacity': 0.5,
+        'line-dash-pattern': [6, 4],
+        'curve-style': 'unbundled-bezier',
+        'edge-distances': 'node-position',
+        'control-point-distances': 0,
+        'control-point-weights': 0.5
+      }
+    },
+
+    // — Highlighted edges —  
+    {
+      selector: 'edge.highlighted-edge',
+      style: {
+        'opacity': 1
+      }
+    }
+  ],
+
+  layout: { name: 'preset' },
+
+  // ← these three are your critical zoom & scroll settings:
+  userZoomingEnabled: false,
+  wheelSensitivity: 0.2
+});
 
         // ✨ Animate dashed theme-to-lamp edges
         let dashOffset = 0;
