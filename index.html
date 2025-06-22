@@ -128,6 +128,67 @@
     .legend-dot.floor      { background: #A5A77B; }
     .legend-dot.outdoor    { background: #B7D1C5; }
     .legend-dot.theme      { background: #1B2A22; }
+
+     /* new -> */
+    /* --- Info Popup overlay --- */
+#info-popup {
+  position: fixed;
+  inset: 0;                   /* top/right/bottom/left = 0 */
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#info-popup .info-content {
+  background: #fff;
+  padding: 24px;
+  max-width: 320px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  position: relative;
+  font-family: 'DM Sans', sans-serif;
+  color: #333;
+}
+
+#info-popup .info-content h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+#info-popup .info-content p {
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+/* Close button */
+#info-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* Utility classes to show/hide */
+#info-popup.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#info-popup.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+    /* <- new */
   </style>
 </head>
 <body>
@@ -177,6 +238,17 @@
   </div>
 </div>   
 
+
+<!-- Info popup overlay (initially hidden) -->
+<div id="info-popup" class="hidden">
+  <div class="info-content">
+    <button id="info-close" aria-label="Close">×</button>
+    <h2>How to Use This Map</h2>
+    <p>Hover over any node to see its connections.<br>
+    Click a node to open its detail page in a new tab.</p>
+  </div>
+</div>
+    
   </div>
 
 
@@ -372,6 +444,15 @@
                 break;
               }  
       });
+
+         document
+        .getElementById('info-close')
+        .addEventListener('click', () => {
+          document
+            .getElementById('info-popup')
+            .classList.replace('visible', 'hidden');
+        });
+  
         // --- Legend positioning ---
         //function positionLegend(){
         //  const wrap   = document.getElementById('cy-wrapper');
