@@ -13,20 +13,23 @@
   <style>
     
 <style>
-  /* 1) Base resets always-on */
+   /* 1) Base resets & default gradient */
   html, body {
     margin: 0;
     padding: 0;
     height: auto;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    /* fallback background for non-blend browsers: */
-     linear-gradient(to bottom, #2A2A2A, #1F1F1F);
+
+    /* default background for all browsers */
+    background: linear-gradient(to bottom, #2A2A2A, #1F1F1F);
   }
 
-  /* 2) Enhance with blend-mode where supported */
+  /* 2) Only in browsers that support blend modes,
+        enhance with the paper texture overlay */
   @supports (background-blend-mode: overlay) {
     html, body {
+      /* texture sits on top of the same gradient */
       background-image:
         url('paper_texture.png'),
         linear-gradient(to bottom, #2A2A2A, #1F1F1F);
