@@ -1,0 +1,52 @@
+/* Mind Map Styles */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+
+body {
+  background: linear-gradient(to bottom, #2A2A2A, #1F1F1F);
+  background-image: url('paper_texture.png');
+  background-repeat: repeat;
+}
+
+/* Node Colors */
+.node-chandelier { background-color: #F5F1E8; }
+.node-pendant     { background-color: #7E9BAE; }
+.node-sconce      { background-color: #D9BCA3; }
+.node-table-lamp  { background-color: #E6C4C9; }
+.node-floor-lamp  { background-color: #A5A77B; }
+.node-outdoor     { background-color: #B7D1C5; }
+.node-theme       {
+  background-color: #1B2A22;
+  box-shadow: 0 0 15px #97C594;
+}
+
+/* Edge Styles */
+.edge-default {
+  width: 1.2;
+  opacity: 0.3;
+  line-color: #FFFFFF;
+  line-style: dashed;
+}
+.edge-primary {
+  width: 2;
+  opacity: 0.5;
+  line-color: #FFF8D6;
+}
+.edge-secondary {
+  width: 1;
+  opacity: 0.2;
+  line-color: #AAAAAA;
+}
+
+/* Labels */
+.cy-node-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  text-outline-color: #1F1F1F;
+  text-outline-width: 0.5px;
+}
+
+/* Hover Effects */
+.cy-node-highlighted {
+  text-shadow: 0 0 6px #FFF;
+}
