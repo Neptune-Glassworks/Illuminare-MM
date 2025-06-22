@@ -145,16 +145,31 @@
   transition: opacity 0.2s ease-in-out;
 }
 
+/* ─── Info popup (mobile first) ─── */
 #info-popup .info-content {
   background: #fff;
   padding: 24px;
-  max-width: 420px;
+  max-width: 90vw;     /* up to 90% of viewport on small screens */
   width: 90%;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
   position: relative;
   font-family: 'DM Sans', sans-serif;
   color: #333;
+}
+
+/* ─── Tablet & up: cap to 420px ─── */
+@media (min-width: 600px) {
+  #info-popup .info-content {
+    max-width: 420px;
+  }
+}
+
+/* ─── Desktop & up: bump wider if you like ─── */
+@media (min-width: 1000px) {
+  #info-popup .info-content {
+    max-width: 600px;   /* or whatever you prefer */
+  }
 }
 
 #info-popup .info-content h2 {
