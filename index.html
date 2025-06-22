@@ -12,16 +12,15 @@
   
   <style>
     
-html, body {
-  /* blending layers */
+@supports (background-blend-mode: overlay) {
   html, body {
-  background-image:
-    url('paper_texture.png'),
-    linear-gradient(to bottom, #2A2A2A, #1F1F1F);
-  background-repeat: repeat, no-repeat;
-  background-size: auto, cover;
-  background-blend-mode: soft-light;   /* or try overlay */
-}
+    background-image:
+      url('paper_texture.png'),
+      linear-gradient(to bottom, #2A2A2A, #1F1F1F);
+    background-repeat: repeat, no-repeat;
+    background-size: auto, cover;
+    background-blend-mode: overlay;
+  }
   
   /* the rest of your properties… */
   margin: 0;
