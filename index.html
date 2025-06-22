@@ -39,19 +39,36 @@
     #cy-wrapper {
       position: relative;
       width: 100%;
-      /* padding-bottom: 40vh; /* allow vertical scroll below graph */
-      height: 800px;        /* ← add this */
-      overflow: hidden;     /* optional: prevent scrollbars inside */
+      height: 800px;    /* set fixed height */
+      overflow: hidden; /* no internal scrollbars */
     }
     #cy {
       width: 100%;
-      height: 100vh;       /* full viewport height */
+      height: 100%;     /* fill the wrapper’s 800px */
       pointer-events: auto;
     }
-
+    /* ─── Map controls ─── */
+    #cy-controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 1000;
+    }
+    #cy-controls button {
+      /* your button styling here (colors, borders, etc) */
+      font-size: 18px;
+      background: rgba(255,255,255,0.8);
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      }
+    
     /* ─── Legend styling ─── */
     #mindmap-legend {
-      position: fixed;
+      position: absolute;
       bottom: 20px;
       right: 20px;
       background: rgba(255,255,255,0.85);
@@ -90,8 +107,17 @@
 
   <!-- ─── Graph + Legend together ─── -->
   <div id="cy-wrapper">
-    <div id="cy"></div>
+  <div id="cy"></div>
 
+  <!-- CONTROLS -->
+  <div id="cy-controls">
+    <button data-action="zoom-in">＋</button>
+    <button data-action="zoom-out">－</button>
+    <button data-action="reset">⟳</button>
+    <button data-action="info">i</button>
+  </div>
+
+    
     <div id="mindmap-legend">
       <strong>Legend</strong>
       <span class="legend-dot chandelier"></span>Chandelier<br>
@@ -105,12 +131,7 @@
   </div>
 
  
-    <div id="cy-controls">
-      <button data-action="zoom-in">＋</button>
-      <button data-action="zoom-out">－</button>
-      <button data-action="reset">⟳</button>
-      <button data-action="info">i</button>
-    </div>
+    
 
   <!-- ─── JavaScript: Cytoscape init + interactions + legend positioning ─── -->
   <script>
