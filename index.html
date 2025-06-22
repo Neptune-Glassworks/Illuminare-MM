@@ -13,16 +13,15 @@
   <style>
     
 html, body {
-  background-color: #2A2A2A; /* a solid fallback */
-  background-image:
-    linear-gradient(to bottom, #2A2A2A, #1F1F1F),
-    url('paper_texture.png');
-  background-repeat: no-repeat, repeat;
-  background-size: cover, auto;
-  
-  background-blend-mode: multiply; 
-  /* or try overlay, darken, etc. to taste */
+  /* layer 1: paper texture on top, layer 2: gradient underneath */
+  background: 
+    url('paper_texture.png') repeat, 
+    linear-gradient(to bottom, #2A2A2A, #1F1F1F);
 
+  /* make sure it fills */
+  background-size: auto, cover;
+  
+  /* the rest of your properties… */
   margin: 0;
   padding: 0;
   height: auto;
