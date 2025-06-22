@@ -4,16 +4,17 @@
   <meta charset="utf-8" />
   <title>Illuminare Mind Map</title>
 
-  <!-- Cytoscape.js -->
-  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
-  <!-- DM Sans -->
+  <!-- 1) Cytoscape.js -->
+  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js" defer></script>
+  <!-- 2) DM Sans font -->
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
     rel="stylesheet"
+    defer
   />
 
   <style>
-    /* — Global & Background — */
+    /* ─── Global & Background ─── */
     html, body {
       margin: 0;
       padding: 0;
@@ -33,11 +34,11 @@
       }
     }
 
-    /* — Cytoscape wrapper & viewport — */
+    /* ─── Cytoscape wrapper & viewport ─── */
     #cy-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 40vh; /* extra scroll room */
+      padding-bottom: 40vh; /* scroll room */
     }
     #cy {
       width: 100%;
@@ -45,7 +46,7 @@
       pointer-events: auto;
     }
 
-    /* — Legend styling — */
+    /* ─── Legend styling ─── */
     .legend {
       position: absolute;
       background: rgba(255,255,255,0.9);
@@ -71,7 +72,7 @@
   <div id="cy-wrapper">
     <div id="cy"></div>
 
-    <!-- Legend with all fixture types -->
+    <!-- ─── Complete Legend ─── -->
     <div class="legend">
       <strong>Legend</strong>
       <div><span class="swatch" style="background:#F5F1E8"></span>Chandelier</div>
@@ -85,147 +86,38 @@
   </div>
 
   <script>
-  fetch('data/neptune_theme_network_classified.json')
-    .then(res => res.json())
-    .then(data => {
-      const cy = cytoscape({
-        container: document.getElementById('cy'),
-        elements: data.elements,
-        style: [
-          // Theme nodes
-          {
-            selector: 'node.theme',
-            style: {
-              'background-color': '#1B2A22',
-              'label': 'data(name)',
-              'font-family': 'DM Sans, sans-serif',
-              'font-size': 32,
-              'text-valign': 'center',
-              'color': '#FFF',
-              'text-outline-color': '#1F1F1F',
-              'text-outline-width': 0.5,
-              'width': 46,
-              'height': 46
-            }
-          },
-          // Glow rings
-          {
-            selector: '.glow-ring',
-            style: {
-              'background-color': '#FFD700',
-              'opacity': 0.25,
-              'width': 20,
-              'height': 20,
-              'z-index': 0,
-              'shape': 'ellipse',
-              'events': 'no',
-              'label': ''
-            }
-          },
-          // Fixture palettes
-          { selector: 'node.lamp.chandelier', style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 } },
-          { selector: 'node.lamp.pendant',    style: { 'background-color': '#7E9BAE', 'width': 25, 'height': 25 } },
-          { selector: 'node.lamp.sconce',     style: { 'background-color': '#D9BCA3', 'width': 25, 'height': 25 } },
-          { selector: 'node.lamp.table',      style: { 'background-color': '#E6C4C9', 'width': 25, 'height': 25 } },
-          { selector: 'node.lamp.floor',      style: { 'background-color': '#A5A77B', 'width': 25, 'height': 25 } },
-          { selector: 'node.lamp.outdoor',    style: { 'background-color': '#B7D1C5', 'width': 25, 'height': 25 } },
-          // Default labels
-          {
-            selector: 'node',
-            style: {
-              'label': 'data(name)',
-              'font-family': 'DM Sans, sans-serif',
-              'font-size': 20,
-              'text-valign': 'center',
-              'color': '#FFF',
-              'text-outline-color': '#1F1F1F',
-              'text-outline-width': 0.5
-            }
-          },
-          // Edges
-          {
-            selector: 'edge',
-            style: {
-              'width': 1.5,
-              'line-color': '#E1E7ED',
-              'line-style': 'dashed',
-              'opacity': 0.5,
-              'line-dash-pattern': [6, 4],
-              'curve-style': 'unbundled-bezier',
-              'edge-distances': 'node-position',
-              'control-point-distances': 0,
-              'control-point-weights': 0.5
-            }
-          },
-          {
-            selector: 'edge.highlighted-edge',
-            style: { 'opacity': 1 }
-          }
-        ],
-        layout: { name: 'preset' },
-        userZoomingEnabled: false,
-        wheelSensitivity: 0.2
-      });
-
-      // Animate dashed offsets
-      let dashOffset = 0, frame = 0;
-      (function animate(){
-        frame++;
-        if(frame % 3 === 0){
-          dashOffset = (dashOffset - 1 + 10) % 10;
-          cy.edges().filter(e => e.source().hasClass('theme') && e.target().hasClass('lamp'))
-            .forEach(e => e.style('line-dash-offset', dashOffset));
-        }
-        requestAnimationFrame(animate);
-      })();
-
-      // Curved edges
-      const factor = -0.35;
-      cy.edges().forEach(edge => {
-        const s = edge.source().position();
-        const t = edge.target().position();
-        const d = Math.hypot(t.x - s.x, t.y - s.y);
-        edge.style({
-          'curve-style': 'unbundled-bezier',
-          'control-point-distances': factor * d,
-          'control-point-weights': 0.5
+  // ─── Wait for the DOM, then run everything ───
+  window.addEventListener('DOMContentLoaded', () => {
+    fetch('data/neptune_theme_network_classified.json')
+      .then(r => r.json())
+      .then(data => {
+        const cy = cytoscape({
+          container: document.getElementById('cy'),
+          elements: data.elements,
+          style: [
+            // … your full style array from before …
+          ],
+          layout: { name: 'preset' },
+          userZoomingEnabled: false,
+          wheelSensitivity: 0.2
         });
+
+        // … your dash animation, edge curves, center/zoom,
+        //    hover glow & highlight code …
+
+        // ─── Legend positioning ───
+        function positionLegend() {
+          const wrap = document.getElementById('cy-wrapper');
+          if (!wrap) return;
+          const r = wrap.getBoundingClientRect();
+          const lg = document.querySelector('.legend');
+          lg.style.top  = `${r.bottom - lg.offsetHeight - 10}px`;
+          lg.style.left = `${r.right  - lg.offsetWidth  - 10}px`;
+        }
+        window.addEventListener('resize', positionLegend);
+        positionLegend();
       });
-
-      // Center & zoom
-      cy.center();
-      cy.zoom(0.65);
-
-      // Hover glow
-      const glowSet = new Set(), hoverSet = new Set();
-      cy.on('mouseover','node',evt=>{
-        const n=evt.target, id=n.id(), gid=`glow-${id}`;
-        if(!n.data('url')||n.hasClass('glow-ring')||hoverSet.has(id)||glowSet.has(gid)) return;
-        hoverSet.add(id); glowSet.add(gid);
-        cy.add({ group:'nodes', data:{id:gid}, position:n.position(), classes:'glow-ring' })
-          .animate({ style:{ width:n.width()*5, height:n.height()*5, opacity:0 }},{ duration:600, easing:'ease-out',
-            complete: ()=>{ cy.getElementById(gid).remove(); glowSet.delete(gid); }
-          });
-      });
-      cy.on('mouseout','node',evt=> hoverSet.delete(evt.target.id()));
-      cy.on('tap','node',evt=>{ const u=evt.target.data('url'); if(u) window.open(u); });
-      cy.nodes('.theme, .lamp')
-        .on('mouseover', e => e.target.connectedEdges().addClass('highlighted-edge'))
-        .on('mouseout',  e => e.target.connectedEdges().removeClass('highlighted-edge'));
-
-      // Legend positioning
-      function positionLegend() {
-  const wrapper = document.getElementById('cy-wrapper');
-  console.log('wrapper is', wrapper);           // should log the <div>
-  if (!wrapper) return;                         // guard against missing ID
-  const rect = wrapper.getBoundingClientRect();
-  const legend = document.querySelector('.legend');
-  legend.style.top  = `${rect.bottom - legend.offsetHeight - 10}px`;
-  legend.style.left = `${rect.right  - legend.offsetWidth  - 10}px`;
-}
-      window.addEventListener('resize', positionLegend);
-      positionLegend();
-    });
+  });
   </script>
 </body>
 </html>
