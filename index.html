@@ -224,6 +224,46 @@ cy.container().addEventListener('wheel', function (e) {
         cy.center(); // prevents zooming out so far that it's invisible
         cy.zoom(.65); // or whatever feels balanced
 
+
+        <style>
+  .legend {
+    position: absolute;
+    background: rgba(255,255,255,0.9);
+    padding: 8px;
+    border-radius: 4px;
+    font: 14px DM Sans, sans-serif;
+    right: 20px;  /* initial offsets, will be overridden by JS */
+    bottom: 20px;
+  }
+</style>
+<body>
+  <div id="cy-wrapper">
+    <div id="cy"></div>
+    <div class="legend">
+      <strong>Legend</strong><br>
+      ● Chandelier<br>
+      ● Pendant<br>
+      <!-- etc… -->
+    </div>
+  </div>
+  <script>
+    // … your cytoscape init …
+
+    function positionLegend() {
+      const wrapper = document.getElementById('cy-wrapper');
+      if (!wrapper) return;
+      const rect   = wrapper.getBoundingClientRect();
+      const legend = document.querySelector('.legend');
+      legend.style.top  = `${rect.bottom - legend.offsetHeight - 10}px`;
+      legend.style.left = `${rect.right  - legend.offsetWidth  - 10}px`;
+    }
+
+    window.addEventListener('resize', positionLegend);
+    positionLegend();
+  </script>
+</body>
+
+  
         // 💡 Glow and highlight
         const glowCooldown = new Set();
         const activeHoverSet = new Set();
