@@ -214,14 +214,15 @@
         .on('mouseout',  e => e.target.connectedEdges().removeClass('highlighted-edge'));
 
       // Legend positioning
-      function positionLegend(){
-        const wrap = document.getElementById('cy-wrapper');
-        if(!wrap) return;
-        const r = wrap.getBoundingClientRect();
-        const lg = document.querySelector('.legend');
-        lg.style.top  = `${r.bottom - lg.offsetHeight - 10}px`;
-        lg.style.left = `${r.right  - lg.offsetWidth  - 10}px`;
-      }
+      function positionLegend() {
+  const wrapper = document.getElementById('cy-wrapper');
+  console.log('wrapper is', wrapper);           // should log the <div>
+  if (!wrapper) return;                         // guard against missing ID
+  const rect = wrapper.getBoundingClientRect();
+  const legend = document.querySelector('.legend');
+  legend.style.top  = `${rect.bottom - legend.offsetHeight - 10}px`;
+  legend.style.left = `${rect.right  - legend.offsetWidth  - 10}px`;
+}
       window.addEventListener('resize', positionLegend);
       positionLegend();
     });
