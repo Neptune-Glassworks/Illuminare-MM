@@ -63,13 +63,15 @@
     fetch('data/neptune_theme_network_classified.json')
       .then(res => res.json())
       .then(data => {
-      const cy = cytoscape({
+
+        
+const cy = cytoscape({
   container: document.getElementById('cy'),
   elements: data.elements,
 
   style: [
 
-    // — Theme nodes —  
+    // 1) Theme nodes (bigger, dark olive, soft glow)
     {
       selector: 'node.theme',
       style: {
@@ -83,7 +85,6 @@
         'text-outline-width': '0.5px',
         'width': 46,
         'height': 46,
-        /* soft glow via Cytoscape shadows */
         'shadow-blur': 15,
         'shadow-color': '#97C594',
         'shadow-opacity': 0.4,
@@ -92,7 +93,7 @@
       }
     },
 
-    // — Glow rings (unchanged) —  
+    // 2) Glow rings (unchanged)
     {
       selector: '.glow-ring',
       style: {
@@ -107,7 +108,7 @@
       }
     },
 
-    // — Lamp nodes with new palette —  
+    // 3) Lamp fixtures with new warm/cool palette
     {
       selector: 'node.lamp.chandelier',
       style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 }
@@ -133,7 +134,7 @@
       style: { 'background-color': '#B7D1C5', 'width': 25, 'height': 25 }
     },
 
-    // — Default node labels —  
+    // 4) Default nodes (labels, text outlines)
     {
       selector: 'node',
       style: {
@@ -147,7 +148,7 @@
       }
     },
 
-    // — Default edges —  
+    // 5) Default edges (dashed, light opacity)
     {
       selector: 'edge',
       style: {
@@ -163,18 +164,19 @@
       }
     },
 
-    // — Highlighted edges —  
+    // 6) Highlighted edges (on hover)
     {
       selector: 'edge.highlighted-edge',
       style: {
         'opacity': 1
       }
     }
-  ],
+
+  ],  // end of style array
 
   layout: { name: 'preset' },
 
-  // ← these three are your critical zoom & scroll settings:
+  // KEEP THESE EXACTLY AS IS:
   userZoomingEnabled: false,
   wheelSensitivity: 0.2
 });
