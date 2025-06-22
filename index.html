@@ -75,13 +75,14 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: rgba(255,255,255,0.85);
+      background: rgba(30,30,30,0.85);
+      color: #f3f3f3; 
       border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 14px;
-      line-height: 1.6;
+      padding: 16px;
       font-family: 'DM Sans', sans-serif;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-size: 14px;
+      line-height: 1.4;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       backdrop-filter: blur(6px);
       z-index: 99;
       transition: all 0.3s ease;
@@ -89,22 +90,36 @@
     #mindmap-legend strong {
       display: block;
       margin-bottom: 8px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-size: 16px;
     }
-    .legend-dot {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
+    #mindmap-legend .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    #mindmap-legend .legend-item:last-child {
+      margin-bottom: 0;
+    }
+
+    #mindmap-legend .legend-dot {
+      width: 14px;
+      height: 14px;
       margin-right: 8px;
-      vertical-align: middle;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.3);
     }
-    .legend-dot.chandelier { background: #C5A68F; }
-    .legend-dot.pendant    { background: #C1D9ED; }
-    .legend-dot.sconce     { background: #FFE1CB; }
+
+    .legend-dot.chandelier { background: #F5F1E8; }
+    .legend-dot.pendant    { background: #7E9BAE; }
+    .legend-dot.sconce     { background: #D9BCA3; }
     .legend-dot.table      { background: #E6C4C9; }
-    .legend-dot.floor      { background: #C5B48F; }
-    .legend-dot.outdoor    { background: #312517; }
-    .legend-dot.theme      { background: #525B44; }
+    .legend-dot.floor      { background: #A5A77B; }
+    .legend-dot.outdoor    { background: #B7D1C5; }
+    .legend-dot.theme      { background: #1B2A22; }
   </style>
 </head>
 <body>
@@ -307,26 +322,26 @@
 
 
         // ─── Button interactions ───
-document.getElementById('cy-controls').addEventListener('click', e => {
-  const action = e.target.getAttribute('data-action');
-  if (!action) return;
+        document.getElementById('cy-controls').addEventListener('click', e => {
+          const action = e.target.getAttribute('data-action');
+              if (!action) return;
 
-  switch (action) {
-    case 'zoom-in':
-      cy.zoom(cy.zoom() + 0.1);
-      break;
-    case 'zoom-out':
-      cy.zoom(cy.zoom() - 0.1);
-      break;
-    case 'reset':
-      cy.center();
-      cy.zoom(0.65);
-      break;
-    case 'info':
-      alert('Hover nodes to see connections; click to open detail pages.');
-      break;
-  }
-});
+              switch (action) {
+                case 'zoom-in':
+                  cy.zoom(cy.zoom() + 0.1);
+                break;
+                case 'zoom-out':
+                  cy.zoom(cy.zoom() - 0.1);
+                break;
+                case 'reset':
+                  cy.center();
+                  cy.zoom(0.65);
+                break;
+                case 'info':
+                  alert('Hover nodes to see connections; click to open detail pages.');
+                break;
+              }  
+      });
         // --- Legend positioning ---
         //function positionLegend(){
         //  const wrap   = document.getElementById('cy-wrapper');
