@@ -470,7 +470,7 @@
           .on('mouseover', evt => evt.target.connectedEdges().addClass('highlighted-edge'))
           .on('mouseout', evt => evt.target.connectedEdges().removeClass('highlighted-edge'));
 
-        // Button interactions
+        // ─── Button interactions ───
         document.getElementById('cy-controls').addEventListener('click', e => {
           const action = e.target.getAttribute('data-action');
           if (!action) return;
@@ -482,40 +482,54 @@
               cy.zoom(cy.zoom() - 0.1);
               break;
             case 'reset':
-               // Initial pan & zoom
+              // Initial pan & zoom
               if (isTouch) {
-                  cy.fit(cy.elements(), 20);
-                  cy.panBy({ x: 0, y: -300 });
-              } 
-              else {
+                cy.fit(cy.elements(), 20);
+                cy.panBy({ x: 0, y: -300 });
+              } else {
                 cy.center();
                 cy.zoom(0.70);
                 cy.panBy({ x: -40, y: -20 });
               }
-              
               break;
             case 'info':
-              document.getElementById('info-popup').classList.replace('hidden','visible');
+              document
+                .getElementById('info-popup')
+                .classList.replace('hidden','visible');
               break;
           }
         });
 
+        // ─── Legend-hover interactions ───
         document.querySelectorAll('#mindmap-legend .legend-item').forEach(item => {
-  const type = item.dataset.type;
-  item.addEventListener('mouseenter', () => {
-    cy.nodes().addClass('dimmed');
-    cy.nodes(`node.lamp.${type}`).removeClass('dimmed').addClass('highlighted-node');
-  });
-  item.addEventListener('mouseleave', () => {
-    cy.nodes().removeClass('dimmed highlighted-node');
-  });
-});
+          const type = item.dataset.type;
+          item.addEventListener('mouseenter', () => {
+            // build the right selector (theme vs lamp)
+            const selector = type === 'theme'
+              ? 'node.theme'
+              : `node.lamp.${type}`;
 
-        // Info popup close
-        document.getElementById('info-close').addEventListener('click', () => {
-          document.getElementById('info-popup').classList.replace('visible','hidden');
+            // dim everything…
+            cy.nodes().addClass('dimmed');
+            // …then highlight only the matching nodes
+            cy.nodes(selector)
+              .removeClass('dimmed')
+              .addClass('highlighted-node');
+          });
+          item.addEventListener('mouseleave', () => {
+            // restore all nodes
+            cy.nodes().removeClass('dimmed highlighted-node');
+          });
         });
-      });
+
+        // ─── Info popup close ───
+        document.getElementById('info-close').addEventListener('click', () => {
+          document
+            .getElementById('info-popup')
+            .classList.replace('visible','hidden');
+        });
+
+      }); // end of .then(data => { …
   </script>
 </body>
 </html>
