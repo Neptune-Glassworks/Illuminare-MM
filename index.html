@@ -459,10 +459,15 @@
               break;
             case 'reset':
                // Initial pan & zoom
+              if (isTouch) {
+                  cy.fit(cy.elements(), 20);  
+              } 
+              else {
                 cy.center();
                 cy.zoom(0.70);
                 cy.panBy({ x: -40, y: -20 });
-
+              }
+              
               break;
             case 'info':
               document.getElementById('info-popup').classList.replace('hidden','visible');
