@@ -24,16 +24,18 @@
       -webkit-overflow-scrolling: touch;
       background: linear-gradient(to bottom, #2A2A2A, #1F1F1F);
     }
-    @supports (background-blend-mode: overlay) {
-      html, body {
-        background-image:
-          url('paper_texture.png'),
-          linear-gradient(to bottom, #2A2A2A, #1F1F1F);
-        background-repeat: repeat, no-repeat;
-        background-size: auto, cover;
-        background-blend-mode: overlay;
-      }
+    @media (min-width: 769px) {
+  @supports (background-blend-mode: overlay) {
+    html, body {
+      background-image:
+        url('paper_texture.png'),
+        linear-gradient(to bottom, #2A2A2A, #1F1F1F);
+      background-repeat: repeat, no-repeat;
+      background-size: auto, cover;
+      background-blend-mode: overlay;
     }
+  }
+}
 
     /* ─── Cytoscape container ─── */
     #cy-wrapper {
