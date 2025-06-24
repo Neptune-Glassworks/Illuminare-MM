@@ -390,10 +390,15 @@
         });
 
         // Initial pan & zoom
+        if (isTouch) {
+          cy.fit(cy.elements(), 20);  
+        } 
+        else {
         cy.center();
         cy.zoom(0.70);
         cy.panBy({ x: -40, y: -20 });
-
+        }
+        
         // Scroll/zoom guard
         let zoomResetTimer;
         cy.container().addEventListener('wheel', e => {
