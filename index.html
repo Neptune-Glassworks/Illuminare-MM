@@ -226,27 +226,34 @@
 
     <div id="mindmap-legend">
       <strong>Legend</strong>
-      <div class="legend-item">
-        <span class="legend-dot chandelier"></span>Chandelier
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot pendant"></span>Pendant
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot sconce"></span>Sconce
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot table"></span>Table Lamp
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot floor"></span>Floor Lamp
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot outdoor"></span>Outdoor
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot theme"></span>Theme Node
-      </div>
+      <div class="legend-item" data-type="chandelier">
+  <span class="legend-dot chandelier"></span>
+  <span class="legend-label">Chandelier</span>
+</div>
+<div class="legend-item" data-type="pendant">
+  <span class="legend-dot pendant"></span>
+  <span class="legend-label">Pendant</span>
+</div>
+<div class="legend-item" data-type="sconce">
+  <span class="legend-dot sconce"></span>
+  <span class="legend-label">Sconce</span>
+</div>
+<div class="legend-item" data-type="table">
+  <span class="legend-dot table"></span>
+  <span class="legend-label">Table Lamp</span>
+</div>
+<div class="legend-item" data-type="floor">
+  <span class="legend-dot floor"></span>
+  <span class="legend-label">Floor Lamp</span>
+</div>
+<div class="legend-item" data-type="outdoor">
+  <span class="legend-dot outdoor"></span>
+  <span class="legend-label">Outdoor</span>
+</div>
+<div class="legend-item" data-type="theme">
+  <span class="legend-dot theme"></span>
+  <span class="legend-label">Theme Node</span>
+</div>
     </div>
   </div>
 
@@ -299,6 +306,22 @@
                 'label': ''
               }
             },
+            
+            {
+  selector: 'node.dimmed',
+  style: {
+    'opacity': 0.2
+  }
+},
+{
+  selector: 'node.highlighted-node',
+  style: {
+    'opacity': 1,
+    'border-width': 3,
+    'border-color': '#FFD700'
+  }
+},
+            
             { selector: 'node.lamp.chandelier',
               style: { 'background-color': '#F5F1E8', 'width': 25, 'height': 25 }
             },
@@ -476,6 +499,17 @@
               break;
           }
         });
+
+        document.querySelectorAll('#mindmap-legend .legend-item').forEach(item => {
+  const type = item.dataset.type;
+  item.addEventListener('mouseenter', () => {
+    cy.nodes().addClass('dimmed');
+    cy.nodes(`node.lamp.${type}`).removeClass('dimmed').addClass('highlighted-node');
+  });
+  item.addEventListener('mouseleave', () => {
+    cy.nodes().removeClass('dimmed highlighted-node');
+  });
+});
 
         // Info popup close
         document.getElementById('info-close').addEventListener('click', () => {
