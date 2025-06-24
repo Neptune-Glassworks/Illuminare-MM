@@ -276,15 +276,38 @@
 
 <!-- ─── Info popup overlay ─── -->
 <div id="info-popup" class="hidden">
-  <div class="info-content">
-    <button id="info-close" aria-label="Close">×</button>
-    <h2>How to Use This Map</h2>
-    <ul class="info-steps">
-      <li>Hover over any node to see its connections.</li>
-      <li>Hover over the legend to highlight each group.</li>
-      <li>Click a node to open its detail page in a new tab.</li>
-    </ul>
-  </div>
+<div class="info-content">
+  <button id="info-close" aria-label="Close">×</button>
+  <h2>How to Use This Map</h2>
+
+  <h3>1. Touch & Mouse Controls</h3>
+  <ul>
+    <li><strong>Drag to pan:</strong>
+      <ul>
+        <li>Desktop: click-and-drag anywhere on the map</li>
+        <li>Mobile/tablet: one-finger drag</li>
+      </ul>
+    </li>
+    <li><strong>Pinch to zoom:</strong> spread two fingers to zoom in, pinch to zoom out</li>
+    <li><strong>Scroll wheel:</strong> on desktop, hold Ctrl (⌘) + scroll to zoom; plain scroll scrolls the page</li>
+  </ul>
+
+  <h3>2. Reset & Center</h3>
+  <ul>
+    <li>Hit the ⟳ Reset button (or press <kbd>R</kbd>) at any time to return to the default view</li>
+  </ul>
+
+  <h3>3. Legend Interactions</h3>
+  <ul>
+    <li><strong>Hover</strong> over a legend entry to highlight all fixtures of that type</li>
+    <li><strong>Click</strong> a legend entry to toggle filtering on/off</li>
+  </ul>
+
+  <h3>4. Nodes & Links</h3>
+  <ul>
+    <li><strong>Hover</strong> a node to emphasize its connecting edges</li>
+    <li><strong>Click</strong> a node to open its detail page in a new tab</li>
+  </ul>
 </div>
 
   <!-- ─── JavaScript: Cytoscape init + interactions ─── -->
