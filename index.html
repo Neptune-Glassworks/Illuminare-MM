@@ -431,8 +431,10 @@
 
         // Initial pan & zoom
         if (isTouch) {
-          const pad = window.innerHeight * 0.10;
-        cy.fit(cy.elements(), pad);
+          cy.fit(cy.elements(), 20);
+          cy.zoom(0.70);
+  const yOff = -window.innerHeight * 0.4;
+  cy.panBy({ x: 0, y: yOff });
         } 
         else {
         cy.center();
