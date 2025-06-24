@@ -369,6 +369,9 @@
           wheelSensitivity: 0.2
         });
 
+      // Prevent nodes from being dragged around
+          cy.nodes().ungrabify();
+
      // if we’re on a phone/tablet, turn zooming back on so pinch works
         if (isTouch) {
           cy.userZoomingEnabled(true);
