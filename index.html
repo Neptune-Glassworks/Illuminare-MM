@@ -14,7 +14,13 @@
     rel="stylesheet"
   />
 
-  <style>
+ <style>
+   
+ /* ─── Make padding/margins count inside widths ─── */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
     /* ─── Page background + paper‐grain overlay ─── */
     html, body {
       margin: 0;
@@ -37,12 +43,7 @@
       }
     }
 
-    /* hide the first two hover‐instructions on small screens */
-@media (max-width: 480px) {
-  #info-popup .info-steps .desktop-only {
-    display: none;
-  }
-}
+
 
     /* ─── Cytoscape container ─── */
     #cy-wrapper {
@@ -147,6 +148,13 @@
       pointer-events: none;
       transition: opacity 0.2s ease-in-out;
     }
+
+        /* hide the first two hover‐instructions on small screens */
+@media (max-width: 480px) {
+  #info-popup .info-steps .desktop-only {
+    display: none;
+  }
+}
     
 /* mobile first: leave 20px on each side */
 #info-popup .info-content {
@@ -570,6 +578,13 @@
             .classList.replace('visible','hidden');
         });
 
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('info-popup')
+            .classList.replace('visible','hidden');
+  }
+});
+        
       }); // end of .then(data => { …
   </script>
 </body>
