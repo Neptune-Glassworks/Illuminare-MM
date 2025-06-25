@@ -465,12 +465,12 @@ About to delete some things….
         // Initial pan & zoom
         if (isTouch) {
           cy.fit(cy.elements(), 10);
-  const yOff = -window.innerHeight * 1.15;
+  const yOff = -window.innerHeight * 1.2;
   cy.panBy({ x: 0, y: yOff });
         } 
         else {
         cy.center();
-        cy.zoom(0.70);
+        cy.zoom(0.65);
         cy.panBy({ x: -40, y: -20 });
         }
         
