@@ -463,13 +463,13 @@
         // Initial pan & zoom
         if (isTouch) {
           cy.fit(cy.elements(), 10);
-  const yOff = -window.innerHeight * 1.1;
-  cy.panBy({ x: 0, y: yOff });
+        const yOff = -window.innerHeight * 1.1;
+          cy.panBy({ x: 0, y: yOff });
         } 
         else {
-        cy.center();
-        cy.zoom(0.68);
-        cy.panBy({ x: -40, y: -20 });
+          cy.center();
+          cy.zoom(0.68);
+          cy.panBy({ x: -40, y: -20 });
         }
         
         // Scroll/zoom guard
@@ -533,13 +533,15 @@
             case 'reset':
               // Initial pan & zoom
               if (isTouch) {
-                cy.fit(cy.elements(), 20);
-                cy.panBy({ x: 0, y: -300 });
-              } else {
-                cy.center();
-                cy.zoom(0.70);
-                cy.panBy({ x: -40, y: -20 });
-              }
+          cy.fit(cy.elements(), 10);
+        const yOff = -window.innerHeight * 1.1;
+          cy.panBy({ x: 0, y: yOff });
+        } 
+        else {
+          cy.center();
+          cy.zoom(0.68);
+          cy.panBy({ x: -40, y: -20 });
+        }
               break;
             case 'info':
               document
