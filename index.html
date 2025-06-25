@@ -144,7 +144,7 @@
       background: #fff;
       padding: 24px;
       max-width: 90vw;
-      width: 90%;
+      width: 90vw;
       border-radius: 8px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.2);
       position: relative;
@@ -152,15 +152,18 @@
       color: #333;
     }
     @media (min-width: 600px) {
-      #info-popup .info-content {
-        max-width: 250px;
-      }
-    }
-    @media (min-width: 1000px) {
-      #info-popup .info-content {
-        max-width: 520px;
-      }
-    }
+  #info-popup .info-content {
+    width: 250px;      /* force it to 250px wide */
+    max-width: 250px;  /* cap it there as well */
+  }
+}
+
+@media (min-width: 1000px) {
+  #info-popup .info-content {
+    width: 520px;
+    max-width: 520px;
+  }
+}
     #info-popup .info-content h2 {
       margin-top: 0;
       font-size: 18px;
