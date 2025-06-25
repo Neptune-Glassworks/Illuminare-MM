@@ -463,7 +463,7 @@
         // Initial pan & zoom
 if (isTouch) {
   cy.fit(cy.elements(), 20);             // ← give 20px padding all around
-  cy.panBy({ x: 0, y: -300 });           // ← your “perfect” up-shift
+  cy.panBy({ x: 0, y: -250 });           // ← your “perfect” up-shift
 } else {
   cy.center();
   cy.zoom(0.68);
@@ -533,7 +533,7 @@ if (isTouch) {
       case 'reset':
         if (isTouch) {
           cy.fit(cy.elements(), 20);     // ← same 20px padding  
-          cy.panBy({ x: 0, y: -300 });   // ← same pan
+          cy.panBy({ x: 0, y: -250 });   // ← same pan
         } else {
           cy.center();
           cy.zoom(0.68);
