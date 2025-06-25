@@ -462,7 +462,7 @@
 
         // Initial pan & zoom
         if (isTouch) {
-          cy.fit(cy.elements(), 10);
+          cy.fit(cy.elements(), 0);
         const yOff = -window.innerHeight * 1.1;
           cy.panBy({ x: 0, y: yOff });
         } 
@@ -533,7 +533,7 @@
             case 'reset':
               // Initial pan & zoom
               if (isTouch) {
-          cy.fit(cy.elements(), 10);
+          cy.fit(cy.elements(), 0);
         const yOff = -window.innerHeight * 1.1;
           cy.panBy({ x: 0, y: yOff });
         } 
