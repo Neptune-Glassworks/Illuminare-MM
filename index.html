@@ -461,16 +461,14 @@
         });
 
         // Initial pan & zoom
-        if (isTouch) {
-          cy.fit(cy.elements(), 0);
-        const yOff = -window.innerHeight * 1.1;
-          cy.panBy({ x: 0, y: yOff });
-        } 
-        else {
-          cy.center();
-          cy.zoom(0.68);
-          cy.panBy({ x: -40, y: -20 });
-        }
+if (isTouch) {
+  cy.fit(cy.elements(), 20);             // ← give 20px padding all around
+  cy.panBy({ x: 0, y: -300 });           // ← your “perfect” up-shift
+} else {
+  cy.center();
+  cy.zoom(0.68);
+  cy.panBy({ x: -40, y: -20 });
+}
         
         // Scroll/zoom guard
         let zoomResetTimer;
@@ -520,37 +518,34 @@
           .on('mouseout', evt => evt.target.connectedEdges().removeClass('highlighted-edge'));
 
         // ─── Button interactions ───
-        document.getElementById('cy-controls').addEventListener('click', e => {
-          const action = e.target.getAttribute('data-action');
-          if (!action) return;
-          switch (action) {
-            case 'zoom-in':
-              cy.zoom(cy.zoom() + 0.1);
-              break;
-            case 'zoom-out':
-              cy.zoom(cy.zoom() - 0.1);
-              break;
-            case 'reset':
-              // Initial pan & zoom
-              if (isTouch) {
-          cy.fit(cy.elements(), 0);
-        const yOff = -window.innerHeight * 1.1;
-          cy.panBy({ x: 0, y: yOff });
-        } 
-        else {
+        document.getElementById('cy-controls')
+  .addEventListener('click', e => {
+    const action = e.target.getAttribute('data-action');
+    if (!action) return;
+
+    switch (action) {
+      case 'zoom-in':
+        cy.zoom(cy.zoom() + 0.1);
+        break;
+      case 'zoom-out':
+        cy.zoom(cy.zoom() - 0.1);
+        break;
+      case 'reset':
+        if (isTouch) {
+          cy.fit(cy.elements(), 20);     // ← same 20px padding  
+          cy.panBy({ x: 0, y: -300 });   // ← same pan
+        } else {
           cy.center();
           cy.zoom(0.68);
           cy.panBy({ x: -40, y: -20 });
         }
-              break;
-            case 'info':
-              document
-                .getElementById('info-popup')
+        break;
+      case 'info':
+        document.getElementById('info-popup')
                 .classList.replace('hidden','visible');
-              break;
-          }
-        });
-
+        break;
+    }
+  });
         // ─── Legend-hover interactions ───
         document.querySelectorAll('#mindmap-legend .legend-item').forEach(item => {
           const type = item.dataset.type;
