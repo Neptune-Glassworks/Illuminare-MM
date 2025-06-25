@@ -37,6 +37,13 @@
       }
     }
 
+    /* hide the first two hover‐instructions on small screens */
+@media (max-width: 480px) {
+  #info-popup .info-steps .desktop-only {
+    display: none;
+  }
+}
+
     /* ─── Cytoscape container ─── */
     #cy-wrapper {
       position: relative;
@@ -291,10 +298,10 @@
     <button id="info-close" aria-label="Close">×</button>
     <h2>How to Use This Map</h2>
     <ul class="info-steps">
-      <li>Hover over any node to see its connections.</li>
-      <li>Hover over a legend entry to highlight all fixtures of that type</li>
+      <li class="desktop-only">Hover over any node to see its connections.</li>
+      <li class="desktop-only">Hover over a legend entry to highlight all fixtures of that type.</li>
       <li>Click a node to open its detail page in a new tab.</li>
-      <li>Hit the ⟳ Reset button to return to the default view</li>
+      <li>Hit the ⟳ Reset button to return to the default view.</li>
     </ul>
   </div>
 </div>
